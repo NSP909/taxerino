@@ -80,6 +80,6 @@ def extract_text_from_pdf(pdf_path):
     return extracted_text
 
 # Usage
-pdf_path = "backend/bank_statement.pdf"
+pdf_path = "/Users/abhyudaygoyal/Desktop/HACKLYTICS/taxerino/backend/extraction/W2_New.pdf"
 extracted_text = extract_text_from_pdf(pdf_path)
 print(extracted_text[7:len(extracted_text)-3])
