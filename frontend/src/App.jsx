@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout/Layout";
 import LandingPage from "./pages/LandingPage";
+import DashboardPage from "./pages/DashboardPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import ChatPage from "./pages/ChatPage";
 import "./index.css";
@@ -21,7 +22,7 @@ function App() {
           path="/dashboard"
           element={
             <Layout>
-              <div className="h-full" />
+              <DashboardPage />
             </Layout>
           }
         />

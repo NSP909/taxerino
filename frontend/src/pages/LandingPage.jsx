@@ -9,6 +9,7 @@ import {
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
+import Contact from "../components/Landing/Contact";
 
 const features = [
   {
@@ -136,31 +137,7 @@ export default function LandingPage() {
       </motion.section>
 
       {/* Contact Section */}
-      <motion.section
-        ref={contactRef}
-        id="contact"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="py-24 bg-emerald-950"
-      >
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
-            Ready to simplify your taxes?
-          </h2>
-          <p className="text-lg text-emerald-100/70 mb-8 max-w-2xl mx-auto">
-            Join thousands of users who have made tax filing easier with
-            Taxerino. Start your journey today.
-          </p>
-          <a
-            href="/dashboard"
-            className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white text-lg font-medium rounded-xl hover:bg-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-          >
-            Get Started Now
-          </a>
-        </div>
-      </motion.section>
+      <Contact />
     </div>
   );
 }

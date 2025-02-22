@@ -21,7 +21,14 @@ export default function Sidebar() {
   return (
     <div className="h-full w-64 bg-emerald-900 flex flex-col">
       <div className="p-4">
-        <h1 className="text-2xl font-bold text-white">Taxerino</h1>
+        <Link to="/" className="flex items-center group">
+          <div className="h-10 w-10 rounded-xl bg-emerald-600/20 border border-emerald-500/20 flex items-center justify-center group-hover:border-emerald-500/40 transition-colors">
+            <div className="h-6 w-6 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 group-hover:shadow-emerald-500/70"></div>
+          </div>
+          <span className="ml-3 text-xl text-white font-medium tracking-wide">
+            Taxerino
+          </span>
+        </Link>
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {
