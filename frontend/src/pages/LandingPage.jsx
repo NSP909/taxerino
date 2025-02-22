@@ -1,67 +1,166 @@
-import { Link } from "react-router-dom";
+import { useRef } from "react";
+import Hero from "../components/Landing/Hero";
+import { ScrollTicker } from "../components/Landing/ScrollTicker";
+import MainNav from "../components/Landing/MainNav";
 import {
-  ArrowRightIcon,
   DocumentTextIcon,
   ChatBubbleLeftRightIcon,
   ShieldCheckIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
+
+const features = [
+  {
+    icon: DocumentTextIcon,
+    title: "Easy Document Management",
+    description:
+      "Upload and organize your tax documents securely. Support for various formats and automatic categorization.",
+  },
+  {
+    icon: ChatBubbleLeftRightIcon,
+    title: "AI Tax Assistant",
+    description:
+      "Get instant answers to your tax questions from our intelligent assistant, available 24/7.",
+  },
+  {
+    icon: ShieldCheckIcon,
+    title: "Bank-Level Security",
+    description:
+      "Your data is protected with enterprise-grade encryption and security measures.",
+  },
+];
+
+const benefits = [
+  "Automated document processing",
+  "Real-time tax calculations",
+  "Expert AI assistance",
+  "Secure data storage",
+  "Easy file organization",
+  "24/7 availability",
+];
 
 export default function LandingPage() {
+  const featuresRef = useRef(null);
+  const contactRef = useRef(null);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const scrollToSection = (ref) => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white flex flex-col items-center justify-center p-4">
-      <div className="text-center max-w-3xl">
-        <h1 className="text-5xl font-bold text-gray-900 mb-6">
-          Simplify Your Tax Filing Journey
-        </h1>
-        <p className="text-xl text-gray-600 mb-12">
-          Upload your documents, chat with our AI assistant, and complete your
-          taxes with confidence.
-        </p>
+    <div className="min-h-screen bg-emerald-950">
+      <MainNav
+        scrollToHome={scrollToTop}
+        scrollToFeatures={() => scrollToSection(featuresRef)}
+        scrollToContact={() => scrollToSection(contactRef)}
+      />
+      <Hero />
+      <ScrollTicker />
 
-        <Link
-          to="/dashboard"
-          className="inline-flex items-center px-8 py-4 bg-indigo-600 text-white font-medium rounded-xl
-                   hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl"
-        >
-          Get Started
-          <ArrowRightIcon className="ml-2 h-5 w-5" />
-        </Link>
-      </div>
-
-      {/* Features */}
-      <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full">
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-            <DocumentTextIcon className="h-6 w-6 text-indigo-600" />
+      {/* Features Section */}
+      <motion.section
+        ref={featuresRef}
+        id="features"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="py-24 bg-emerald-900"
+      >
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center text-white mb-12">
+            Everything you need to manage your taxes
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                className="bg-emerald-800/50 backdrop-blur-sm rounded-2xl p-8 border border-emerald-700/30"
+              >
+                <div className="h-12 w-12 bg-emerald-700 rounded-xl flex items-center justify-center mb-6">
+                  <feature.icon className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-emerald-100/70">{feature.description}</p>
+              </motion.div>
+            ))}
           </div>
-          <h3 className="text-lg font-semibold mb-2">Easy Document Upload</h3>
-          <p className="text-gray-600">
-            Securely upload and manage all your tax-related documents in one
-            place.
-          </p>
         </div>
+      </motion.section>
 
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-            <ChatBubbleLeftRightIcon className="h-6 w-6 text-indigo-600" />
+      {/* Benefits Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="py-24 bg-gradient-to-b from-emerald-900 to-emerald-950"
+      >
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Why choose Taxerino?
+            </h2>
+            <p className="text-lg text-emerald-100/70 mb-12">
+              Experience a smarter way to handle your taxes with our
+              comprehensive suite of features.
+            </p>
           </div>
-          <h3 className="text-lg font-semibold mb-2">AI Assistant</h3>
-          <p className="text-gray-600">
-            Get instant answers to your tax questions from our intelligent
-            assistant.
-          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex items-center space-x-3 bg-emerald-800/30 rounded-xl p-4"
+              >
+                <CheckCircleIcon className="h-6 w-6 text-emerald-400" />
+                <span className="text-white">{benefit}</span>
+              </motion.div>
+            ))}
+          </div>
         </div>
+      </motion.section>
 
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <div className="h-12 w-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
-            <ShieldCheckIcon className="h-6 w-6 text-indigo-600" />
-          </div>
-          <h3 className="text-lg font-semibold mb-2">Secure & Reliable</h3>
-          <p className="text-gray-600">
-            Your data is protected with enterprise-grade security measures.
+      {/* Contact Section */}
+      <motion.section
+        ref={contactRef}
+        id="contact"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="py-24 bg-emerald-950"
+      >
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Ready to simplify your taxes?
+          </h2>
+          <p className="text-lg text-emerald-100/70 mb-8 max-w-2xl mx-auto">
+            Join thousands of users who have made tax filing easier with
+            Taxerino. Start your journey today.
           </p>
+          <a
+            href="/dashboard"
+            className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white text-lg font-medium rounded-xl hover:bg-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            Get Started Now
+          </a>
         </div>
-      </div>
+      </motion.section>
     </div>
   );
 }
