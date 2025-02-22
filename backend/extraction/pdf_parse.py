@@ -3,9 +3,19 @@ from openai import OpenAI
 from pdf2image import convert_from_path
 from dotenv import load_dotenv
 import base64
+import json
+import ssl
+import certifi
+from pymongo import MongoClient
 
 load_dotenv()
+uri = "mongodb+srv://rthippar:TJl8bbai6BVV07cJ@cluster0.s9zrz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
+mongo_client = MongoClient(
+    uri,
+    tls=True,
+    tlsCAFile=certifi.where()
+)
 client = OpenAI(
     api_key=os.environ.get("OPENAI_API_KEY"),
 )
@@ -82,4 +92,10 @@ def extract_text_from_pdf(pdf_path):
 # Usage
 pdf_path = "/Users/abhyudaygoyal/Desktop/HACKLYTICS/taxerino/backend/extraction/W2_New.pdf"
 extracted_text = extract_text_from_pdf(pdf_path)
-print(extracted_text[7:len(extracted_text)-3])
+data = json.loads(extracted_text[7:len(extracted_text)-3])
+# print(extracted_text[7:len(extracted_text)-3])
+print(data)
+db = mongo_client['mydatabase']         # Replace with your actual database name
+collection = db['mycollection']         # Replace with your actual collection name
+result = collection.insert_one(data)
+print("Inserted document with id:", result.inserted_id)
