@@ -19,9 +19,9 @@ export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="h-full w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div className="h-full w-64 bg-emerald-900 flex flex-col">
       <div className="p-4">
-        <h1 className="text-2xl font-bold text-indigo-600">Taxerino</h1>
+        <h1 className="text-2xl font-bold text-white">Taxerino</h1>
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {navItems.map((item) => {
@@ -32,8 +32,8 @@ export default function Sidebar() {
               to={item.path}
               className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                 isActive
-                  ? "bg-indigo-50 text-indigo-600"
-                  : "text-gray-600 hover:bg-gray-50"
+                  ? "bg-emerald-800 text-white"
+                  : "text-emerald-100 hover:bg-emerald-800/50"
               }`}
             >
               <item.icon className="h-5 w-5 mr-3" />
