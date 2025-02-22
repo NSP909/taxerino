@@ -87,15 +87,15 @@ def extract_text_from_pdf(pdf_path):
             
     # Join text from all pages
     extracted_text = "\n\n".join(responses)
-    return extracted_text
+    return extracted_text[7:len(extracted_text)-3]
 
 # Usage
 pdf_path = "/Users/abhyudaygoyal/Desktop/HACKLYTICS/taxerino/backend/extraction/W2_New.pdf"
 extracted_text = extract_text_from_pdf(pdf_path)
-data = json.loads(extracted_text[7:len(extracted_text)-3])
+
 # print(extracted_text[7:len(extracted_text)-3])
-print(data)
-db = mongo_client['mydatabase']         # Replace with your actual database name
-collection = db['mycollection']         # Replace with your actual collection name
-result = collection.insert_one(data)
-print("Inserted document with id:", result.inserted_id)
+# print(data)
+# db = mongo_client['mydatabase']         # Replace with your actual database name
+# collection = db['mycollection']         # Replace with your actual collection name
+# result = collection.insert_one(data)
+# print("Inserted document with id:", result.inserted_id)
