@@ -41,9 +41,16 @@ def extract_text_from_pdf(pdf_path):
                 model="gpt-4o",  # Correct model name
                 messages=[
                     {
+                        "role": "system",
+                        "content": """You are a tax expert. You will be provided with a document image, and your task is to extract all the text from it. 
+                        Please don't add any additional information. Also only extract information from documents which are in the form of tax documents/bank statments etc instead of just plain text.
+                        Also I want you to process the output in the form of a json schema with as many fields as possible with values. 
+                        There is no defined schema you need to extract as much info as you can in a json schema."""
+                    },
+                    {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Extract all text from this document image."},
+                            {"type": "text", "text": "Extract all the info from this and give me back a json and not a string"},
                             {
                                 "type": "image_url",
                                 "image_url": {
@@ -55,7 +62,7 @@ def extract_text_from_pdf(pdf_path):
                 ],
                 max_tokens=1000
             )
-            
+
             # Extract content from the response object correctly
             responses.append(response.choices[0].message.content)
         except Exception as e:
@@ -73,6 +80,6 @@ def extract_text_from_pdf(pdf_path):
     return extracted_text
 
 # Usage
-pdf_path = "/Users/abhyudaygoyal/Desktop/HACKLYTICS/taxerino/backend/GTech booking.pdf"
+pdf_path = "/Users/abhyudaygoyal/Desktop/HACKLYTICS/taxerino/backend/extraction/W2_New.pdf"
 extracted_text = extract_text_from_pdf(pdf_path)
-print(extracted_text)
+print(extracted_text[7:len(extracted_text)-3])
