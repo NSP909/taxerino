@@ -14,7 +14,7 @@ import { useLocation } from "react-router-dom";
 const pageConfig = {
   "/dashboard": {
     icon: HomeIcon,
-    title: "Welcome to Taxerino",
+    title: "Welcome to Tax Daddy",
     description: "Get started by uploading your tax documents",
   },
   "/documents": {

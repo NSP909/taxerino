@@ -1,187 +1,206 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { AnalysisService } from "../services/analysisService";
 import {
-  ExclamationTriangleIcon,
-  DocumentMagnifyingGlassIcon,
   ArrowPathIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+  ShieldExclamationIcon,
+  BanknotesIcon,
+  CalendarIcon,
 } from "@heroicons/react/24/outline";
 
-const AnomalyCard = ({ title, data }) => {
-  const { source_details, anomaly_details } = data;
-
-  // Helper function to format value for display
-  const formatValue = (value) => {
-    if (typeof value === "object" && value !== null) {
-      return JSON.stringify(value, null, 2);
-    }
-    return String(value);
-  };
-
-  return (
-    <div className="bg-white rounded-lg shadow-sm border border-red-100 overflow-hidden">
-      <div className="border-b border-red-100 bg-red-50/50 px-4 py-3">
-        <h3 className="text-lg font-semibold text-red-900">{title}</h3>
-      </div>
-      <div className="p-4 space-y-4">
-        {/* Source Details */}
-        <div>
-          <h4 className="text-sm font-medium text-gray-900 mb-2">
-            Source Details
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {Object.entries(source_details).map(([source, details]) => (
-              <div key={source} className="bg-gray-50 rounded-lg p-3">
-                <div className="flex justify-between items-start">
-                  <span className="text-sm font-medium text-gray-700">
-                    {source}
-                  </span>
-                  <span className="text-sm font-mono bg-gray-100 px-2 py-0.5 rounded">
-                    {formatValue(details.value)}
-                  </span>
-                </div>
-                {details.metadata && (
-                  <p className="text-xs text-gray-600 mt-1">
-                    {formatValue(details.metadata)}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Anomaly Details */}
-        <div className="bg-red-50 rounded-lg p-4">
-          <div className="flex items-start space-x-3">
-            <ExclamationTriangleIcon className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-red-900">
-                  {anomaly_details.type
-                    .split("_")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
-                </span>
-                {anomaly_details.difference && (
-                  <span className="text-sm font-mono bg-red-100 text-red-900 px-2 py-0.5 rounded">
-                    Difference:{" "}
-                    {typeof anomaly_details.difference === "number"
-                      ? anomaly_details.difference.toFixed(2)
-                      : formatValue(anomaly_details.difference)}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-red-700 mt-1">
-                {anomaly_details.description}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export default function AnomaliesPage() {
-  const [anomalies, setAnomalies] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [anomaliesData, setAnomaliesData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchAnomalies = async () => {
+  const fetchAnomaliesData = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      const response = await fetch("/api/anomalies");
-      console.log("Raw response:", response);
-
-      const data = await response.json();
-      console.log("Parsed response data:", data);
-
-      if (data.status === "error") {
-        throw new Error(data.error);
-      } else if (data.status === "empty") {
-        console.log("Empty status received");
-        setAnomalies(null);
-      } else if (data.status === "success") {
-        console.log("Setting anomalies data:", data.data);
-        setAnomalies(data.data);
-      } else {
-        throw new Error("Invalid response format");
-      }
-    } catch (err) {
-      console.error("Error fetching anomalies:", err);
-      setError(err.message);
+      const data = await AnalysisService.getAnomalies();
+      setAnomaliesData(data);
+    } catch (error) {
+      console.error("Failed to fetch anomalies:", error);
+      setError("Failed to load anomalies");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAnomalies();
+    fetchAnomaliesData();
   }, []);
+
+  const getAnomalyTypeColor = (type) => {
+    switch (type.toLowerCase()) {
+      case "future_date":
+        return {
+          bg: "bg-blue-50",
+          text: "text-blue-700",
+          icon: "text-blue-600",
+          border: "border-blue-200",
+        };
+      case "disproportionate_tax":
+        return {
+          bg: "bg-red-50",
+          text: "text-red-700",
+          icon: "text-red-600",
+          border: "border-red-200",
+        };
+      case "incorrect_tax_rate":
+        return {
+          bg: "bg-purple-50",
+          text: "text-purple-700",
+          icon: "text-purple-600",
+          border: "border-purple-200",
+        };
+      case "inconsistent_amounts":
+        return {
+          bg: "bg-yellow-50",
+          text: "text-yellow-700",
+          icon: "text-yellow-600",
+          border: "border-yellow-200",
+        };
+      case "unusually_low":
+        return {
+          bg: "bg-orange-50",
+          text: "text-orange-700",
+          icon: "text-orange-600",
+          border: "border-orange-200",
+        };
+      default:
+        return {
+          bg: "bg-emerald-50",
+          text: "text-emerald-700",
+          icon: "text-emerald-600",
+          border: "border-emerald-200",
+        };
+    }
+  };
+
+  const getAnomalyIcon = (type) => {
+    switch (type.toLowerCase()) {
+      case "future_date":
+        return CalendarIcon;
+      case "disproportionate_tax":
+        return ShieldExclamationIcon;
+      case "incorrect_tax_rate":
+        return ExclamationTriangleIcon;
+      case "inconsistent_amounts":
+        return BanknotesIcon;
+      case "unusually_low":
+        return ExclamationCircleIcon;
+      default:
+        return CheckCircleIcon;
+    }
+  };
+
+  const formatAnomalyType = (type) => {
+    return type
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
 
   return (
     <div className="h-full p-6">
-      {/* Header - Always visible */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Tax Anomalies</h1>
-          <p className="text-gray-600 mt-1">
-            Detected inconsistencies across tax documents
+          <h1 className="text-2xl font-bold text-emerald-900">
+            Anomaly Detection
+          </h1>
+          <p className="text-base text-emerald-600 mt-1">
+            AI-powered detection of unusual patterns in your tax data
           </p>
         </div>
         <button
-          onClick={fetchAnomalies}
+          onClick={fetchAnomaliesData}
           disabled={loading}
-          className={`inline-flex items-center px-4 py-2 bg-red-50 text-red-700 rounded-lg transition-colors ${
-            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-100"
-          }`}
+          className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors
+            ${
+              loading
+                ? "bg-emerald-100 text-emerald-400 cursor-not-allowed"
+                : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+            }`}
         >
           <ArrowPathIcon
             className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
           />
-          {loading ? "Analyzing..." : "Refresh Analysis"}
+          {loading ? "Refreshing..." : "Refresh Analysis"}
         </button>
       </div>
 
-      {/* Content Area */}
-      <div className="min-h-[400px] relative">
-        {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center bg-white/80">
-            <div className="text-center">
-              <div className="animate-pulse flex space-x-2 justify-center mb-4">
-                <div className="h-2.5 w-2.5 bg-red-400 rounded-full"></div>
-                <div className="h-2.5 w-2.5 bg-red-400 rounded-full"></div>
-                <div className="h-2.5 w-2.5 bg-red-400 rounded-full"></div>
-              </div>
-              <p className="text-sm text-gray-500">
-                Analyzing tax documents...
-              </p>
+      <div className="bg-white rounded-xl shadow-lg border border-emerald-900/10 p-6">
+        {error ? (
+          <div className="text-center py-8">
+            <ExclamationCircleIcon className="h-14 w-14 text-red-200 mx-auto mb-3" />
+            <p className="text-lg text-red-900 font-medium">{error}</p>
+            <button
+              onClick={fetchAnomaliesData}
+              className="mt-3 text-sm text-emerald-600 hover:text-emerald-700"
+            >
+              Try again
+            </button>
+          </div>
+        ) : loading ? (
+          <div className="flex items-center justify-center py-6">
+            <div className="animate-pulse flex space-x-2">
+              <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
+              <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
+              <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
             </div>
           </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center text-gray-500 py-12">
-            <ExclamationTriangleIcon className="h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-lg font-medium">Error Loading Anomalies</p>
-            <p className="text-sm mt-2">{error}</p>
-          </div>
-        ) : !anomalies || Object.keys(anomalies).length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-gray-500 py-12">
-            <DocumentMagnifyingGlassIcon className="h-12 w-12 text-gray-400 mb-4" />
-            <p className="text-lg font-medium">No Anomalies Found</p>
-            <p className="text-sm mt-2">
-              All tax documents appear to be consistent
-            </p>
+        ) : anomaliesData?.anomalies?.length > 0 ? (
+          <div className="space-y-4">
+            <div className="grid gap-4">
+              {anomaliesData.anomalies.map((anomaly, index) => {
+                const Icon = getAnomalyIcon(anomaly.anomaly_type);
+                const colors = getAnomalyTypeColor(anomaly.anomaly_type);
+                return (
+                  <div
+                    key={index}
+                    className={`rounded-lg border ${colors.border} ${colors.bg} p-4 transition-all duration-200 hover:shadow-md`}
+                  >
+                    <div className="flex items-start space-x-4">
+                      <div className={`${colors.bg} rounded-md p-2`}>
+                        <Icon className={`h-6 w-6 ${colors.icon}`} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h3
+                              className={`text-base font-semibold ${colors.text}`}
+                            >
+                              {formatAnomalyType(anomaly.anomaly_type)}
+                            </h3>
+                            <p
+                              className={`text-xs mt-0.5 ${colors.text} opacity-75`}
+                            >
+                              Field: {anomaly.field}
+                            </p>
+                          </div>
+                        </div>
+                        <p className={`mt-2 text-sm ${colors.text}`}>
+                          {anomaly.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         ) : (
-          <div className="space-y-6">
-            {Object.entries(anomalies).map(([key, value]) => (
-              <AnomalyCard
-                key={key}
-                title={key
-                  .split("_")
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")}
-                data={value}
-              />
-            ))}
+          <div className="text-center py-8">
+            <CheckCircleIcon className="h-14 w-14 text-emerald-200 mx-auto mb-3" />
+            <p className="text-lg text-emerald-900 font-medium">
+              No anomalies detected
+            </p>
+            <p className="text-base text-emerald-600 mt-2">
+              Your tax data appears to be consistent
+            </p>
           </div>
         )}
       </div>

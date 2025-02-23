@@ -47,8 +47,8 @@ export default function Hero() {
 
       {/* Content */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-center w-full max-w-3xl px-4">
-        <h1 className="text-8xl md:text-[168px] font-bold tracking-tighter bg-[radial-gradient(100%_100%_at_top_left,white,white,rgb(6,78,59,.5))] text-transparent bg-clip-text leading-none mb-8">
-          Taxerino
+        <h1 className="text-8xl md:text-[168px] font-bold tracking-tighter bg-[radial-gradient(100%_100%_at_left_center,white,white_60%,rgb(6,78,59,.5))] text-transparent bg-clip-text leading-none mb-8">
+          Tax Daddy
         </h1>
         <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-8">
           Simplify your tax filing journey with AI-powered assistance and secure

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { AnalysisService } from "../services/analysisService";
 import {
   BarChart,
   Bar,
@@ -23,44 +24,71 @@ const BenfordAnalysisPage = () => {
     fetchAnalysisData();
   }, []);
 
+  const generateSummary = (data) => {
+    const score = data.similarity_score;
+    const scorePercentage = (score * 100).toFixed(1);
+
+    let riskLevel = score >= 0.8 ? "low" : score >= 0.5 ? "moderate" : "high";
+    let interpretation = "";
+    let recommendation = "";
+
+    if (score >= 0.8) {
+      interpretation =
+        "The financial data closely follows Benford's Law distribution, indicating natural and likely legitimate number patterns.";
+      recommendation =
+        "Continue maintaining good financial record-keeping practices.";
+    } else if (score >= 0.5) {
+      interpretation =
+        "There are some deviations from the expected Benford's Law distribution, which may warrant closer examination.";
+      recommendation =
+        "Consider reviewing transactions, particularly those starting with digits showing unusual frequencies.";
+    } else {
+      interpretation =
+        "Significant deviations from Benford's Law detected, suggesting potential anomalies in the financial data.";
+      recommendation =
+        "Conduct a detailed audit of the financial records, focusing on transactions with unusual first-digit patterns.";
+    }
+
+    return {
+      scoreAnalysis: `The data shows a ${scorePercentage}% conformity with Benford's Law, indicating a ${riskLevel} risk level.`,
+      interpretation,
+      recommendation,
+    };
+  };
+
   const fetchAnalysisData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/get-benford-data");
-      const data = await response.json();
-      console.log("Benford analysis response:", data); // Debug log
+      const data = await AnalysisService.getBenfordAnalysis();
+      console.log("Benford analysis response:", data);
 
-      if (data.status === "success") {
-        const benfordData = data.benford_data;
-        console.log("Benford data:", benfordData); // Debug log
-
+      if (data) {
         // Transform data for chart
         const chartData = Array.from({ length: 9 }, (_, i) => ({
           digit: i + 1,
-          actual: benfordData.actual_distribution[i],
-          expected: benfordData.expected_distribution[i],
+          actual: data.actual_distribution[i],
+          expected: data.expected_distribution[i],
         }));
 
+        const summary = generateSummary(data);
+
         setAnalysisData({
-          ...benfordData,
+          ...data,
           risk_level:
-            benfordData.similarity_score < 0.5
+            data.similarity_score < 0.5
               ? "high"
-              : benfordData.similarity_score < 0.8
+              : data.similarity_score < 0.8
               ? "moderate"
               : "normal",
           chartData,
-          summary: data.summary, // Add the summary to the state
+          summary,
         });
-      } else if (data.status === "empty") {
-        console.log("No tax data available"); // Debug log
-        setError("No tax data available for analysis");
       } else {
-        console.error("Error in response:", data.error); // Debug log
-        setError(data.error || "Failed to fetch analysis data");
+        console.log("No Benford analysis data available");
+        setError("No analysis data available");
       }
     } catch (err) {
-      console.error("Fetch error:", err); // Debug log
+      console.error("Fetch error:", err);
       setError("Failed to fetch analysis data");
     } finally {
       setLoading(false);
@@ -147,7 +175,7 @@ const BenfordAnalysisPage = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="digit"
-                label={{ value: "", position: "bottom" }}
+                label={{ value: "First Digit", position: "bottom" }}
               />
               <YAxis
                 label={{
@@ -168,15 +196,28 @@ const BenfordAnalysisPage = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* AI-Generated Summary */}
+        {/* Analysis Summary */}
         {analysisData.summary && (
           <div className="mt-6 bg-gray-50 rounded-lg p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              AI Analysis Summary
+              Analysis Summary
             </h3>
-            <p className="text-gray-600 whitespace-pre-line">
-              {analysisData.summary}
-            </p>
+            <div className="space-y-4">
+              <p className="text-gray-600">
+                {analysisData.summary.scoreAnalysis}
+              </p>
+              <p className="text-gray-600">
+                {analysisData.summary.interpretation}
+              </p>
+              <div className="mt-4">
+                <h4 className="text-sm font-medium text-gray-900 mb-2">
+                  Recommendation
+                </h4>
+                <p className="text-gray-600">
+                  {analysisData.summary.recommendation}
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </div>

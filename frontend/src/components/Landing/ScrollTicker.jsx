@@ -1,27 +1,24 @@
 "use client";
 import { motion } from "framer-motion";
-import bgbLogo from "../../assets/bgb.png";
 import caponeLogo from "../../assets/capone.png";
-import coinbaseLogo from "../../assets/coinbase.png";
 import devpostLogo from "../../assets/devpost.png";
-import dshawLogo from "../../assets/dshaw.png";
-import eqvLogo from "../../assets/eqv.png";
+import AssurantLogo from "../../assets/assurant.png";
+import MLH from "../../assets/mlh.png";
+import GTLogo from "../../assets/gt.png";
 
 export const ScrollTicker = () => {
   const logos = [
-    bgbLogo,
     caponeLogo,
-    coinbaseLogo,
     devpostLogo,
-    dshawLogo,
-    eqvLogo,
+    GTLogo,
+    AssurantLogo,
+    MLH,
     // Repeat for continuous scroll
-    bgbLogo,
     caponeLogo,
-    coinbaseLogo,
     devpostLogo,
-    dshawLogo,
-    eqvLogo,
+    GTLogo,
+    AssurantLogo,
+    MLH,
   ];
 
   return (

@@ -21,7 +21,7 @@ export default function MainNav() {
                 <div className="h-6 w-6 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 group-hover:shadow-emerald-500/70"></div>
               </div>
               <span className="ml-3 text-white font-medium tracking-wide">
-                Taxerino
+                Tax Daddy
               </span>
             </Link>
 

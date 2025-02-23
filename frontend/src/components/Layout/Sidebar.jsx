@@ -17,7 +17,7 @@ const navItems = [
   { name: "Documents", icon: DocumentTextIcon, path: "/documents" },
   { name: "Tax Insights", icon: ChartBarIcon, path: "/insights" },
   { name: "Tax Summary", icon: DocumentChartBarIcon, path: "/summary" },
-  { name: "Benford Analysis", icon: ChartPieIcon, path: "/benford" },
+  { name: "Fraud Detection", icon: ChartPieIcon, path: "/benford" },
   { name: "Anomalies", icon: ExclamationTriangleIcon, path: "/anomalies" },
   { name: "Tax Chat", icon: ChatBubbleLeftRightIcon, path: "/chat" },
   { name: "Call", icon: PhoneIcon, path: "/call" },
@@ -36,7 +36,7 @@ export default function Sidebar() {
             <div className="h-6 w-6 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50 group-hover:shadow-emerald-500/70"></div>
           </div>
           <span className="ml-3 text-xl text-white font-medium tracking-wide">
-            Taxerino
+            Tax Daddy
           </span>
         </Link>
       </div>

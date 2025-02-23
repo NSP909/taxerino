@@ -1,25 +1,54 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   DocumentTextIcon,
   ArrowRightIcon,
   DocumentArrowUpIcon,
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
+import { AnalysisService } from "../../services/analysisService";
 
-export default function TaxSummaryPreview({
-  taxSummary,
-  documentsData,
-  generateTaxSummary,
-  isLoading,
-}) {
+export default function TaxSummaryPreview() {
+  const [taxSummary, setTaxSummary] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const fetchTaxSummary = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await AnalysisService.getTaxSummary();
+      if (data?.summary && data?.status === "success") {
+        // Parse the stringified JSON summary
+        try {
+          const parsedSummary = JSON.parse(data.summary);
+          setTaxSummary(parsedSummary);
+        } catch (parseError) {
+          console.error("Failed to parse summary:", parseError);
+          setError("Invalid summary format");
+        }
+      } else {
+        setTaxSummary(null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch tax summary:", error);
+      setError("Failed to load tax summary");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTaxSummary();
+  }, []);
+
   const getPreviewData = (summary) => {
     try {
-      const data = JSON.parse(summary);
       return {
-        income: data.summary.overview.total_income,
-        status: data.summary.overview.filing_status,
-        nextDeadline: data.summary.deadlines.filing_deadline,
-        keyAction: data.summary.recommendations.immediate_actions,
+        income: summary.overview.total_income,
+        status: summary.overview.filing_status,
+        nextDeadline: summary.deadlines.filing_deadline,
+        keyAction: summary.recommendations.immediate_actions,
       };
     } catch (error) {
       console.error("Failed to parse summary:", error);
@@ -27,11 +56,7 @@ export default function TaxSummaryPreview({
     }
   };
 
-  const previewData =
-    taxSummary?.status === "success"
-      ? getPreviewData(taxSummary.summary)
-      : null;
-  const hasDocuments = documentsData && Object.keys(documentsData).length > 0;
+  const previewData = taxSummary ? getPreviewData(taxSummary.summary) : null;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-emerald-900/10 p-6">
@@ -41,20 +66,39 @@ export default function TaxSummaryPreview({
             Tax Summary
           </h2>
           <p className="text-sm text-emerald-600">
-            {hasDocuments
-              ? "Quick overview of your tax analysis"
-              : "Upload documents to get your tax analysis"}
+            Quick overview of your tax analysis
           </p>
         </div>
-        <div className="flex items-center text-sm text-emerald-600">
-          <DocumentTextIcon className="h-5 w-5 mr-2" />
-          <span>
-            {documentsData ? Object.keys(documentsData).length : 0} data points
-          </span>
-        </div>
+        <button
+          onClick={fetchTaxSummary}
+          disabled={loading}
+          className="text-emerald-600 hover:text-emerald-700"
+        >
+          <ArrowPathIcon
+            className={`h-5 w-5 ${loading ? "animate-spin" : ""}`}
+          />
+        </button>
       </div>
 
-      {taxSummary?.status === "success" && previewData ? (
+      {error ? (
+        <div className="text-center py-6">
+          <p className="text-red-600">{error}</p>
+          <button
+            onClick={fetchTaxSummary}
+            className="mt-2 text-sm text-emerald-600 hover:text-emerald-700"
+          >
+            Try again
+          </button>
+        </div>
+      ) : loading ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-pulse flex space-x-2">
+            <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
+            <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
+            <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
+          </div>
+        </div>
+      ) : previewData ? (
         <>
           <div className="space-y-4 mb-4">
             {/* Key Information Grid */}
@@ -101,33 +145,6 @@ export default function TaxSummaryPreview({
             <ArrowRightIcon className="h-4 w-4 ml-1" />
           </Link>
         </>
-      ) : hasDocuments && !isLoading ? (
-        <div className="flex flex-col items-center justify-center py-8 px-4">
-          <DocumentTextIcon className="h-12 w-12 text-emerald-200 mb-4" />
-          <p className="text-emerald-900 font-medium text-center mb-2">
-            Documents uploaded successfully
-          </p>
-          <p className="text-emerald-600 text-sm text-center mb-6">
-            Generate a tax analysis to get insights about your tax situation
-          </p>
-          <button
-            onClick={generateTaxSummary}
-            className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
-          >
-            Generate Analysis
-            <ArrowPathIcon
-              className={`h-4 w-4 ml-2 ${isLoading ? "animate-spin" : ""}`}
-            />
-          </button>
-        </div>
-      ) : isLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-pulse flex space-x-2">
-            <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
-            <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
-            <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
-          </div>
-        </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-8 px-4">
           <DocumentArrowUpIcon className="h-12 w-12 text-emerald-200 mb-4" />
