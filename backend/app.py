@@ -11,6 +11,7 @@ from pymongo import MongoClient
 from datetime import datetime
 from tax_summary import generate_tax_summary
 from extraction.pdf_json_to_plot_data import generate_plot_values_from_provided_data
+from benford import analyze_benfords_law
 
 app = Flask(__name__)
 load_dotenv()
@@ -150,6 +151,11 @@ def get_current_tax_data():
         print(f"Error retrieving from MongoDB: {str(e)}")
         return {}
 
+def update_info_json():
+    data = get_current_tax_data()
+    with open("info.json", 'w') as file:
+        json.dump(data, file, indent=4)
+
 def pdf_to_images(pdf_path, dpi=200, output_folder="temp_images"):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -247,6 +253,7 @@ def upload_file():
                 update_tax_data(data, filename)
                 # Clear the summary cache since we have new data
                 clear_summary_cache()
+            update_info_json()
             
         except Exception as e:
             print(f"Error processing uploaded file: {str(e)}")
@@ -295,7 +302,30 @@ def get_tax_summary():
         error_response = {"error": "Failed to generate tax summary", "status": "error"}
         save_summary_cache(error_response)
         return error_response, 500
-
+    
+@app.route('/api/get-benford-data', methods=['GET'])
+def get_tax_plots():
+    """
+    Generate plot data from the tax data using LLM.
+    """
+    try:
+        # Get current tax data
+        update_info_json()
+        plot_data = analyze_benfords_law()
+        
+        return {
+            "benford_data": plot_data,
+            "status": "success"
+        }, 200
+        
+    except Exception as e:
+        print(f"Error in tax plots endpoint: {str(e)}")
+        return {
+            "error": "Failed to generate plot data",
+            "status": "error",
+            "details": str(e)
+        }, 500
+    
 @app.route('/api/tax-plots', methods=['GET'])
 def get_tax_plots():
     """
