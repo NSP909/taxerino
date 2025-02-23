@@ -193,5 +193,3 @@ def generate_plot_values_from_provided_data(input_json):
     
     plot_ideas = extract_plot_ideas(input_json)
     return extract_plot_values(plot_json=plot_ideas, total_info_json=input_json)
-
-    

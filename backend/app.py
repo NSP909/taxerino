@@ -10,6 +10,7 @@ import json
 from pymongo import MongoClient
 from datetime import datetime
 from tax_summary import generate_tax_summary
+from extraction.pdf_json_to_plot_data import generate_plot_values_from_provided_data
 
 app = Flask(__name__)
 load_dotenv()
@@ -294,6 +295,98 @@ def get_tax_summary():
         error_response = {"error": "Failed to generate tax summary", "status": "error"}
         save_summary_cache(error_response)
         return error_response, 500
+
+@app.route('/api/tax-plots', methods=['GET'])
+def get_tax_plots():
+    """
+    Generate plot data from the tax data using LLM.
+    """
+    try:
+        # Get current tax data
+        tax_data = get_current_tax_data()
+        if not tax_data:
+            return {"error": "No tax data available yet.", "status": "empty"}, 200
+
+        # Generate plot data using the LLM
+        plot_data = generate_plot_values_from_provided_data(tax_data)
+        print("Generated plot data:", json.dumps(plot_data, indent=2))  # Debug log
+        
+        return {
+            "plot_data": plot_data,
+            "status": "success"
+        }, 200
+        
+    except Exception as e:
+        print(f"Error in tax plots endpoint: {str(e)}")
+        return {
+            "error": "Failed to generate plot data",
+            "status": "error",
+            "details": str(e)
+        }, 500
+
+def save_debug_json(raw_data, normalized_data):
+    """Save raw and normalized JSON data to debug files in both frontend and backend"""
+    try:
+        # Backend paths
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        backend_debug_folder = os.path.join(base_dir, CACHE_FOLDER, 'debug')
+        
+        # Frontend paths (relative to backend)
+        frontend_debug_folder = os.path.join(base_dir, '..', 'frontend', 'src', 'debug')
+        
+        # Create directories if they don't exist
+        os.makedirs(backend_debug_folder, exist_ok=True)
+        os.makedirs(frontend_debug_folder, exist_ok=True)
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # Save files in backend location
+        backend_raw_file = os.path.join(backend_debug_folder, f'raw_plot_data_{timestamp}.json')
+        backend_norm_file = os.path.join(backend_debug_folder, f'normalized_plot_data_{timestamp}.json')
+        
+        # Save files in frontend location
+        frontend_raw_file = os.path.join(frontend_debug_folder, f'raw_plot_data_{timestamp}.json')
+        frontend_norm_file = os.path.join(frontend_debug_folder, f'normalized_plot_data_{timestamp}.json')
+        
+        # Save to backend location
+        with open(backend_raw_file, 'w') as f:
+            json.dump(raw_data, f, indent=2)
+        with open(backend_norm_file, 'w') as f:
+            json.dump(normalized_data, f, indent=2)
+            
+        # Save to frontend location
+        with open(frontend_raw_file, 'w') as f:
+            json.dump(raw_data, f, indent=2)
+        with open(frontend_norm_file, 'w') as f:
+            json.dump(normalized_data, f, indent=2)
+            
+        print(f"Debug files saved at:")
+        print(f"Backend raw data: {backend_raw_file}")
+        print(f"Backend normalized data: {backend_norm_file}")
+        print(f"Frontend raw data: {frontend_raw_file}")
+        print(f"Frontend normalized data: {frontend_norm_file}")
+        return True
+    except Exception as e:
+        print(f"Error saving debug files: {str(e)}")
+        print(f"Attempted to save in backend directory: {backend_debug_folder}")
+        print(f"Attempted to save in frontend directory: {frontend_debug_folder}")
+        return False
+
+@app.route('/api/debug/save-plot-data', methods=['POST'])
+def save_plot_debug_data():
+    """
+    Save raw and normalized plot data for debugging.
+    """
+    try:
+        data = request.get_json()
+        if not data or 'raw_data' not in data or 'normalized_data' not in data:
+            return {"error": "Missing required data"}, 400
+
+        save_debug_json(data['raw_data'], data['normalized_data'])
+        return {"status": "success", "message": "Debug data saved"}, 200
+    except Exception as e:
+        print(f"Error in save plot debug data endpoint: {str(e)}")
+        return {"error": "Failed to save debug data", "details": str(e)}, 500
 
 if __name__ == '__main__':
     print("Server starting... Upload folder:", os.path.abspath(UPLOAD_FOLDER))
