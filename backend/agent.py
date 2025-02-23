@@ -12,6 +12,7 @@ import sys
 from dotenv import load_dotenv
 from form_filler.forms import el_filler
 from rag import get_relevant_info
+from rcarb import get_formatted_syntax
 import pyautogui
 
 load_dotenv()
@@ -479,7 +480,7 @@ options  = {"W-9": # Part I - Taxpayer Identification
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 PORT = int(os.getenv('PORT', 5050))
 
-VOICE = 'sage'
+VOICE = 'ash'
 LOG_EVENT_TYPES = [
     'error', 'response.content.done', 'rate_limits.updated',
     'response.done', 'input_audio_buffer.committed',
@@ -629,8 +630,12 @@ async def handle_media_stream(websocket: WebSocket):
                                 arguments = json.loads(response["response"]["output"][0]["arguments"])
                                 print(arguments)
                                 form=arguments["form"]
+                                with open("info.json", "r") as f:
+                                    info = json.load(f)
+                                info=str(info)
                                 if form in options:
                                     syntax = options[form]
+                                final_syntax= get_formatted_syntax(syntax, info)
                                 conversation_item = {
                                         "type": "conversation.item.create",
                                         "item": {
@@ -639,8 +644,9 @@ async def handle_media_stream(websocket: WebSocket):
                                         "content": [
                                             {
                                                 "type": "input_text",
-                                                "text": f"""Here is the syntax for the form you asked:
-                                                        {syntax}"""
+                                                "text": f"""Here is the updated syntax with info filled in:
+                                                        {final_syntax}
+                                                        """
                                             }
                                         ]
                                     }
@@ -656,6 +662,7 @@ async def handle_media_stream(websocket: WebSocket):
                                 data=arguments["data"]
                                 dikt= json.loads(data)
                                 output = el_filler(form, dikt)
+
                                 conversation_item = {
                                         "type": "conversation.item.create",
                                         "item": {
@@ -707,9 +714,12 @@ async def handle_media_stream(websocket: WebSocket):
                                 arguments = json.loads(response["response"]["output"][1]["arguments"])
                                 print(arguments)
                                 form=arguments["form"]
+                                with open("info.json", "r") as f:
+                                    info = json.load(f)
+                                info=str(info)
                                 if form in options:
                                     syntax = options[form]
-
+                                final_syntax= get_formatted_syntax(syntax, info)
                                 conversation_item = {
                                         "type": "conversation.item.create",
                                         "item": {
@@ -718,8 +728,9 @@ async def handle_media_stream(websocket: WebSocket):
                                         "content": [
                                             {
                                                 "type": "input_text",
-                                                "text": f"""Here is the syntax for the form you asked:
-                                                        {syntax}"""
+                                                "text": f"""Here is the updated syntax with info filled in:
+                                                        {final_syntax}
+                                                        """
                                             }
                                         ]
                                     }
@@ -843,7 +854,7 @@ async def send_initial_conversation_item(openai_ws):
             "content": [
                 {
                     "type": "input_text",
-                    "text": "Greet the user with an energetic quote and ask how you can help them today."
+                    "text": "Greet the user in an energetic tone nd ask how you can help them today."
                 }
             ]
         }
@@ -861,7 +872,12 @@ async def initialize_session(openai_ws):
     SYSTEM_MESSAGE = (
        f"""You are TaxDaddy - the tax expert.
            Your job is to help users fill out their tax forms and assist with their tax-related queries.
+           This is the data that we have on file about the user.
+           {info} 
+           MAKE SURE YOU UNDERSTAND THAT YOU HAVE THIS INFORMATION AND USE IT ACCORDINGLY
+
            If the user has any kind of specific question then use the function get_relevant_information to get the information from the database before answering the question.
+
            You also help out in filling forms. We have 5 forms available right now
               1. W-9 -  This form is used by independent contractors, freelancers, and self-employed individuals who are U.S. citizens or resident aliens.
               2. W-8BEN - This form is used by non-resident aliens who earn income in the U.S. This form is specifically for foreign individuals who: Are not U.S. citizens or resident aliens, Receive income from U.S. sources (like investments or contract work), Need to claim tax treaty benefits, Are working with U.S. companies or receiving payments from U.S. sources
@@ -870,24 +886,19 @@ async def initialize_session(openai_ws):
               5. 8863 - Form 8863 should be filed along with your Form 1040 if you, your spouse, or your dependents paid qualified educational expenses at an eligible institution and want to claim education credits like the American Opportunity Credit or the Lifetime Learning Credit.
               6. 8843 - Form 8843 needs to be filed if you're an international student, teacher, researcher on F, J, M, or Q visas, or someone with a medical condition that prevented you from leaving the U.S. Submit this by April 15th if you're also filing a tax return, or by June 15th if you don't need to file a return. You can file Form 8843 by itself if you had no U.S. income to report.
 
-           Once the user gives you enough information call the get_form_syntax function and you shall recieve the exact fields that you will need to fill out the application
+           Once the user gives you enough information call the get_form_syntax function and you shall recieve the exact fields that you will need to fill out the application.
+           THe get_form_syntax function will return the syntax of the form with some data already filled in based on the user's info on file. 
+           You need to figure out the rest of the fields that requires info by talking to the user
            Once you have the syntax maintain normal converstion and gather all the data required. Ask information one by one like a normal human
            Once you have all the data required call the fill_form function with the correct forn and the data you have gathered.
            If the user instructs you to fill out the form with the existing information then mark all other fields as zero or empty  and fill out the form with the existing information.
            
            I will also provide you infomation about the user, fill out as much as info as you can by using this information
-           This is the data that we have on file about the user.
-           {info} 
-
-
-
 
            MAKE SURE TO USE THE FUNCTIONS WHENEVER REQUIRED
            
            Be Pleasant and witty!!
 
-
-          
             """
             )
     session_update = {
@@ -925,7 +936,9 @@ async def initialize_session(openai_ws):
                     "name": "get_form_syntax",
                     "description": """Get the fields required to fill out a particular form.
                     Use this when you have decided which form you need to fil out and need a list of fields to fill out
-                    Currently we can fill out these forms W-9, W-8BEN, W-4
+                    The form will already be filled out with the data you have so far
+                    You need to look out for the fields that require more info and ask the user questions based on that
+                    Currently we can fill out these forms W-9, W-8BEN, W-4, 1040, 8863, 8843
                      """,
                     "parameters": {
                     "type": "object",
