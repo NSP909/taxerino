@@ -20,6 +20,9 @@ env/
 *.swp
 *.swo
 
+
 # OS specific files
 .DS_Store
 Thumbs.db 
+
+token.json

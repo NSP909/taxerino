@@ -4,6 +4,7 @@ from .form_w8ben import fill_w8ben_form
 from .form_1040 import fill_1040_form
 from .form_8863 import fill_8863_form
 from .form_8843 import fill_8843_form
+from .gmail import send_pdf_via_gmail
 import json 
 def el_filler(form, data):
     try:
@@ -28,6 +29,7 @@ def el_filler(form, data):
                 ein_first=data["ein_first"],
                 ein_second=data["ein_second"]
             )
+            send_pdf_via_gmail("filled/filled_w9.pdf")
         elif form == "W-4":
             print("enetring w4")
             fill_w4_form(
@@ -62,6 +64,7 @@ def el_filler(form, data):
                 per_period_value= data["per_period_value"]
 
             )
+            send_pdf_via_gmail("filled/filled_w4.pdf")
         elif form == "W-8BEN":
             fill_w8ben_form(
                 name=data["name"],
@@ -82,6 +85,7 @@ def el_filler(form, data):
                 treaty_article_cite=data["treaty_article_cite"],
                 treaty_paragraph=data["treaty_paragraph"]
             )
+            send_pdf_via_gmail("filled/filled_w8ben.pdf")
         elif form == "1040":
             if data["dependents"]:
                 data["dependents"] = json.loads(data["dependents"])
@@ -254,6 +258,7 @@ def el_filler(form, data):
                 firm_address=data["firm_address"],
                 firm_ein=data["firm_ein"]
             )
+            send_pdf_via_gmail("filled/filled_1040.pdf")
         elif form == "8863":
             fill_8863_form(
             # Basic Taxpayer Information
@@ -324,6 +329,7 @@ def el_filler(form, data):
             completed_first_4_years=data["completed_first_4_years"],
             felony_drug_conviction=data["felony_drug_conviction"]
         )
+            send_pdf_via_gmail("filled/filled_form_8863.pdf")
         elif form == "8843":
             fill_8843_form(
             # Part 1 - Personal Information
@@ -409,6 +415,7 @@ def el_filler(form, data):
             intended_leave_date=data["intended_leave_date"],
             actual_leave_date=data["actual_leave_date"]
         )
+            send_pdf_via_gmail("filled/filled_form_8843.pdf")
         return "Form filled successfully"
     except Exception as e:
         print(e)

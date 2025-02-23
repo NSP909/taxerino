@@ -671,7 +671,7 @@ async def handle_media_stream(websocket: WebSocket):
                                         "content": [
                                             {
                                                 "type": "input_text",
-                                                "text": f"""Status of form : {output}"""
+                                                "text": f"""Status of form : {output}. THe form will also get mailed to the user"""
                                             }
                                         ]
                                     }
@@ -758,7 +758,7 @@ async def handle_media_stream(websocket: WebSocket):
                                         "content": [
                                             {
                                                 "type": "input_text",
-                                                "text": f"""Status of form : {output}"""
+                                                "text": f"""Status of form : {output}. The form also gets mailed to the user"""
                                             }
                                         ]
                                     }
