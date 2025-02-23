@@ -6,6 +6,7 @@ import {
   DocumentDuplicateIcon,
   CogIcon,
   PhoneIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
 
@@ -39,6 +40,11 @@ const pageConfig = {
     icon: CogIcon,
     title: "Settings",
     description: "Manage your account and preferences",
+  },
+  "/benford": {
+    icon: ChartPieIcon,
+    title: "Benford's Law Analysis",
+    description: "Analyze numerical patterns in your financial data",
   },
 };
 

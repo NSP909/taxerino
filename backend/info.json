@@ -1,74 +1,198 @@
 {
-    "bank": {
-        "name": "Terp Bank",
-        "address": "4000 Stadium Drive, College Park, MD 20742"
+    "account": {
+        "type": "Connections Checking",
+        "number": "000009752"
     },
+    "bank": "Commerce Bank",
     "customer": {
-        "name": "Aditya Singh", 
-        "address": "3854 Stadium Drive, College Park, MD 20742",
-        "SSN":"123-45-6789",
-        "EIN":"12-3456789"
+        "name": "Jane Customer",
+        "address": "1234 Anywhere Dr. Small Town, MO 12345-6789"
     },
-    "statement": {
-        "primaryAccountNumber": "000009752",
-        "statementDate": "June 5, 2003",
-        "pageNumber": 1
+    "last_updated": "2025-02-23T06:38:14.001000",
+    "summary": {
+        "balance_start": "\u00a340,000.00",
+        "total_money_in": "\u00a35,474.00",
+        "total_money_out": "\u00a31,395.17",
+        "balance_end": "\u00a344,079.83"
     },
-    "accountSummary": {
-        "accountNumber": "000009752",
-        "beginningBalance": "$7,126.11",
-        "depositsCredits": "+3,615.08",
-        "atmWithdrawalsDebits": "-20.00",
-        "visaCheckCardPurchasesDebits": "-0.00",
-        "withdrawalsOtherDebits": "-0.00", 
-        "checksPaid": "-200.00",
-        "endingBalance": "$10,521.19"
+    "transactions": [
+        {
+            "date": "1 February",
+            "description": "Cardpayment - High St Petrol Station",
+            "money_out": "24.50",
+            "balance": "39,975.50"
+        },
+        {
+            "date": "1 February",
+            "description": "Direct debit - Green Mobile Phone Bill",
+            "money_out": "20.00",
+            "balance": "39,955.50"
+        },
+        {
+            "date": "3 February",
+            "description": "Cash Withdrawal - YourBank, Anytown",
+            "money_out": "30.00",
+            "balance": "39,925.50"
+        },
+        {
+            "date": "4 February",
+            "description": "YourJob BiWeekly Payment",
+            "money_in": "2,575.00",
+            "balance": "42,500.50"
+        },
+        {
+            "date": "11 February",
+            "description": "Direct Deposit - YourBank, Anytown High Street",
+            "money_in": "300.00",
+            "balance": "42,800.50"
+        },
+        {
+            "date": "16 February",
+            "description": "Cash Withdrawal - RandomBank, Randomford",
+            "money_out": "50.00",
+            "balance": "42,750.50"
+        },
+        {
+            "date": "17 February",
+            "description": "Card payment - High St Petrol Station",
+            "money_out": "40.00",
+            "balance": "42,710.50"
+        },
+        {
+            "date": "17 February",
+            "description": "Direct Debit - Home Insurance",
+            "money_out": "78.34",
+            "balance": "42,632.16"
+        },
+        {
+            "date": "18 February",
+            "description": "YourJob BiWeekly Payment",
+            "money_in": "2,575.00",
+            "balance": "45,207.16"
+        },
+        {
+            "date": "18 February",
+            "description": "Randomford's Deli",
+            "money_out": "15.00",
+            "balance": "45,195.16"
+        },
+        {
+            "date": "24 February",
+            "description": "Anytown's Jewelers",
+            "money_out": "150.00",
+            "balance": "45,042.16"
+        },
+        {
+            "date": "24 February",
+            "description": "Direct Deposit",
+            "money_in": "25.00",
+            "balance": "45,067.16"
+        },
+        {
+            "date": "28 February",
+            "description": "Monthly Apartment Rent",
+            "money_out": "987.33",
+            "balance": "44,079.83"
+        }
+    ],
+    "account_summary": {
+        "beginning_balance": {
+            "date": "May 3, 2003",
+            "amount": "$7,126.11"
+        },
+        "deposits_and_credits": "+3,615.08",
+        "atm_withdrawals_and_debits": "-20.00",
+        "visa_check_card_purchases_and_debits": "-0.00",
+        "withdrawals_and_other_debits": "-0.00",
+        "checks_paid": "-200.00",
+        "ending_balance": {
+            "date": "June 5, 2003",
+            "amount": "$10,521.19"
+        }
     },
-    "depositsCredits": {
-        "total": "$3,615.08",
-        "transactions": [
-            {
-                "description": "Deposit",
-                "refNumber": "130012345",
-                "dateCredited": "05-15",
-                "amount": "$3,615.08"
-            }
-        ]
-    },
-    "atmWithdrawalsDebits": {
+    "address": "1000 Walnut Kansas City MO 64106-3686",
+    "atm_withdrawals_and_debits": {
         "total": "$20.00",
         "transactions": [
             {
                 "description": "ATM Withdrawal",
-                "location": "1000 Walnut St, Kansas City MO",
-                "machineNumber": "M119 00005678",
-                "tranDate": "05-18",
-                "datePaid": "05-19",
+                "location": "1000 Walnut St Kansas City MO",
+                "terminal": "M119",
+                "number": "00005678",
+                "tran_date": "05-18",
+                "date_paid": "05-19",
                 "amount": "$20.00"
             }
         ]
     },
-    "checksPaid": {
+    "checks_paid": {
         "total": "$305.00",
         "transactions": [
             {
-                "datePaid": "05-12",
-                "checkNumber": "1001", 
-                "amount": "75.00",
-                "referenceNumber": "00012576589"
+                "date_paid": "05-12",
+                "check_number": "1001",
+                "amount": "$75.00",
+                "reference_number": "00012576589"
             },
             {
-                "datePaid": "05-18",
-                "checkNumber": "1002",
-                "amount": "30.00",
-                "referenceNumber": "00036547854"
+                "date_paid": "05-18",
+                "check_number": "1002",
+                "amount": "$30.00",
+                "reference_number": "00035647854"
             },
             {
-                "datePaid": "05-24",
-                "checkNumber": "1003",
-                "amount": "200.00",
-                "referenceNumber": "00094613547"
+                "date_paid": "05-24",
+                "check_number": "1003",
+                "amount": "$200.00",
+                "reference_number": "00094613547"
             }
         ]
-    }
- }
+    },
+    "deposits_and_other_credits": {
+        "total": "$3,615.08",
+        "transactions": [
+            {
+                "description": "Deposit",
+                "reference_number": "130012345",
+                "date_credited": "05-15",
+                "amount": "$3,615.08"
+            }
+        ]
+    },
+    "primary_account_number": "000009752",
+    "statement": {
+        "date": "June 5, 2003",
+        "page_number": 1
+    },
+    "control_number": "MD126640",
+    "employee_info": {
+        "name": "RITESH R THIPPARTHI",
+        "address": {
+            "line1": "4243 VALLEY DRIVE",
+            "line2": "2208",
+            "city": "COLLEGE PARK",
+            "state": "MD",
+            "zip": "20742"
+        }
+    },
+    "employee_social_security_number": "XXX-XX-8758",
+    "employer_identification_number": "52-6002033",
+    "employer_info": {
+        "name": "STATE OF MARYLAND CENTRAL PAYROLL BUREAU",
+        "address": {
+            "line1": "P.O. BOX 2396",
+            "city": "ANNAPOLIS",
+            "state": "MD",
+            "zip": "21404-2396"
+        },
+        "s_s": "69-0520001L"
+    },
+    "federal_income_tax_withheld": 28.89,
+    "state_info": {
+        "state_abbreviation": "MD",
+        "employer_state_id_number": "52-6002033",
+        "state_wages_tips_etc": 6232.85,
+        "state_income_tax": 275.94
+    },
+    "wages_tips_other_compensation": 6232.85
+}
