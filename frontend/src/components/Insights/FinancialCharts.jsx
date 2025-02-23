@@ -28,13 +28,13 @@ const COLORS = [
 ];
 
 const ChartContainer = ({ title, description, children }) => (
-  <div className="bg-white rounded-xl shadow-lg border border-emerald-900/10 overflow-hidden">
-    <div className="p-6">
-      <h3 className="text-lg font-semibold text-emerald-900 mb-2">{title}</h3>
+  <div className="bg-white rounded-lg shadow-sm border border-emerald-900/10 overflow-hidden">
+    <div className="p-5">
+      <h3 className="text-base font-semibold text-emerald-900 mb-1">{title}</h3>
       {description && (
-        <p className="text-sm text-emerald-600/80 mb-6">{description}</p>
+        <p className="text-xs text-emerald-600/80 mb-4">{description}</p>
       )}
-      <div className="h-[300px]">{children}</div>
+      <div className="h-[250px]">{children}</div>
     </div>
   </div>
 );
@@ -141,7 +141,7 @@ const FinancialCharts = ({ data }) => {
               cx="50%"
               cy="50%"
               labelLine={true}
-              outerRadius={100}
+              outerRadius={80}
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
@@ -155,7 +155,7 @@ const FinancialCharts = ({ data }) => {
               ))}
             </Pie>
             <Tooltip formatter={(value) => `£${value.toFixed(2)}`} />
-            <Legend verticalAlign="bottom" height={36} />
+            <Legend verticalAlign="bottom" height={30} />
           </PieChart>
         </ResponsiveContainer>
       </ChartContainer>
@@ -334,10 +334,10 @@ const FinancialCharts = ({ data }) => {
   }, {});
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Overview charts (pie and bar) */}
       {(chartsByType.piechart || chartsByType.barchart) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {chartsByType.piechart?.map(({ name, info }) => (
             <div key={name}>{renderPieChart(info)}</div>
           ))}
@@ -349,7 +349,7 @@ const FinancialCharts = ({ data }) => {
 
       {/* Trend charts (line) */}
       {chartsByType.linechart && (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4">
           {chartsByType.linechart.map(({ name, info }) => (
             <div key={name}>{renderLineChart(info)}</div>
           ))}
@@ -358,7 +358,7 @@ const FinancialCharts = ({ data }) => {
 
       {/* Analysis charts (heatmap and scatter) */}
       {(chartsByType.heatmap || chartsByType.scatterplot) && (
-        <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-4">
           {chartsByType.heatmap?.map(({ name, info }) => (
             <div key={name}>{renderHeatmap(info)}</div>
           ))}
