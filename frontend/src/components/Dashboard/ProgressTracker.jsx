@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import {
   DocumentTextIcon,
   PhoneIcon,
-  EnvelopeIcon,
+  ChartBarIcon,
+  DocumentChartBarIcon,
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 
@@ -10,24 +11,35 @@ const steps = [
   {
     id: 1,
     name: "Documents Upload",
+    description: "Upload your tax documents",
     icon: DocumentTextIcon,
     path: "/documents",
   },
   {
     id: 2,
     name: "Schedule Call",
+    description: "Book a consultation",
     icon: PhoneIcon,
-    path: "/calling",
+    path: "/call",
   },
   {
     id: 3,
-    name: "Tax Email",
-    icon: EnvelopeIcon,
-    path: "/email",
+    name: "View Insights",
+    description: "AI-powered tax insights",
+    icon: ChartBarIcon,
+    path: "/insights",
   },
   {
     id: 4,
-    name: "Completed",
+    name: "Tax Summary",
+    description: "Complete tax analysis",
+    icon: DocumentChartBarIcon,
+    path: "/summary",
+  },
+  {
+    id: 5,
+    name: "Complete",
+    description: "All steps completed",
     icon: CheckCircleIcon,
     path: null,
   },
@@ -38,7 +50,7 @@ export default function ProgressTracker({
   currentStep = 1,
 }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-emerald-900/10 p-6">
+    <div className="bg-white rounded-xl shadow-sm border border-emerald-900/10 p-6 w-full">
       <h2 className="text-lg font-semibold text-emerald-900 mb-6">
         Tax Progress
       </h2>
@@ -81,9 +93,9 @@ export default function ProgressTracker({
                     }`}
                   />
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center mt-2">
                   <span
-                    className={`mt-2 text-sm font-medium ${
+                    className={`text-sm font-medium ${
                       isCompleted || isCurrent
                         ? "text-emerald-900"
                         : "text-emerald-300"
@@ -91,17 +103,26 @@ export default function ProgressTracker({
                   >
                     {step.name}
                   </span>
+                  <span
+                    className={`text-xs mt-0.5 ${
+                      isCompleted || isCurrent
+                        ? "text-emerald-600"
+                        : "text-emerald-300"
+                    }`}
+                  >
+                    {step.description}
+                  </span>
                   {step.id === 1 && !documentsUploaded && (
                     <span className="text-xs font-medium text-red-500 mt-1">
                       Not Started
                     </span>
                   )}
-                  {step.id === 1 && documentsUploaded && (
+                  {isCompleted && (
                     <span className="text-xs font-medium text-emerald-600 mt-1">
                       Completed
                     </span>
                   )}
-                  {step.id === currentStep && step.id !== 1 && (
+                  {isCurrent && (
                     <span className="text-xs font-medium text-emerald-600 mt-1">
                       In Progress
                     </span>
@@ -125,15 +146,22 @@ export default function ProgressTracker({
           </Link>
         )}
         {documentsUploaded && currentStep === 2 && (
-          <button
-            onClick={() => {
-              /* Schedule call endpoint will be added later */
-            }}
+          <Link
+            to="/call"
             className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
           >
             <PhoneIcon className="w-5 h-5 mr-2" />
             Schedule Call
-          </button>
+          </Link>
+        )}
+        {currentStep === 3 && (
+          <Link
+            to="/insights"
+            className="inline-flex items-center px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
+          >
+            <ChartBarIcon className="w-5 h-5 mr-2" />
+            View Insights
+          </Link>
         )}
       </div>
     </div>

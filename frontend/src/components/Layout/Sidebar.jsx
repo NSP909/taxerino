@@ -5,12 +5,18 @@ import {
   ChatBubbleLeftRightIcon,
   DocumentDuplicateIcon,
   CogIcon,
+  PhoneIcon,
+  ChartBarIcon,
+  DocumentChartBarIcon,
 } from "@heroicons/react/24/outline";
 
 const navItems = [
   { name: "Dashboard", icon: HomeIcon, path: "/dashboard" },
   { name: "Documents", icon: DocumentTextIcon, path: "/documents" },
+  { name: "Tax Insights", icon: ChartBarIcon, path: "/insights" },
+  { name: "Tax Summary", icon: DocumentChartBarIcon, path: "/summary" },
   { name: "Tax Chat", icon: ChatBubbleLeftRightIcon, path: "/chat" },
+  { name: "Call", icon: PhoneIcon, path: "/call" },
   { name: "Forms", icon: DocumentDuplicateIcon, path: "/forms" },
   { name: "Settings", icon: CogIcon, path: "/settings" },
 ];

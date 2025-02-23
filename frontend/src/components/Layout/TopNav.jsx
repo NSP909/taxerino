@@ -5,6 +5,7 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
   CogIcon,
+  PhoneIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
 
@@ -23,6 +24,11 @@ const pageConfig = {
     icon: ChatBubbleLeftRightIcon,
     title: "Tax Assistant",
     description: "Get instant answers to your tax-related questions",
+  },
+  "/call": {
+    icon: PhoneIcon,
+    title: "Schedule a Call",
+    description: "Book a consultation with our tax experts",
   },
   "/forms": {
     icon: DocumentDuplicateIcon,

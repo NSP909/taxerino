@@ -9,6 +9,9 @@ import LandingPage from "./pages/LandingPage";
 import DashboardPage from "./pages/DashboardPage";
 import DocumentsPage from "./pages/DocumentsPage";
 import ChatPage from "./pages/ChatPage";
+import CallPage from "./pages/CallPage";
+import SummaryPage from "./pages/SummaryPage";
+import InsightsPage from "./pages/InsightsPage";
 import "./index.css";
 
 function App() {
@@ -37,10 +40,37 @@ function App() {
         />
 
         <Route
+          path="/insights"
+          element={
+            <Layout>
+              <InsightsPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/summary"
+          element={
+            <Layout>
+              <SummaryPage />
+            </Layout>
+          }
+        />
+
+        <Route
           path="/chat"
           element={
             <Layout>
               <ChatPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/call"
+          element={
+            <Layout>
+              <CallPage />
             </Layout>
           }
         />

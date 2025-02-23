@@ -7,6 +7,7 @@ import {
   ArrowUpTrayIcon,
   DocumentTextIcon,
 } from "@heroicons/react/24/outline";
+import { TaxCache } from "../services/cache";
 
 // Use relative URL instead of absolute URL
 const API_URL = "/api";
@@ -80,6 +81,9 @@ export default function DocumentsPage() {
       }
     }
 
+    // Clear the tax data cache since we have new documents
+    TaxCache.clearTaxData();
+
     // All files uploaded successfully
     await fetchDocuments(); // Refresh the documents list
     setPendingFiles([]); // Clear pending files
@@ -120,6 +124,9 @@ export default function DocumentsPage() {
         const error = await response.json();
         throw new Error(error.error || "Failed to delete file");
       }
+
+      // Clear the tax data cache since we removed a document
+      TaxCache.clearTaxData();
 
       // Remove from UI only after successful server deletion
       setDocuments((prev) => prev.filter((doc) => doc.id !== fileId));
