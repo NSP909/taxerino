@@ -28,14 +28,8 @@ const COLORS = [
 ];
 
 const ChartContainer = ({ title, description, children }) => (
-  <div className="bg-white rounded-lg shadow-sm border border-emerald-900/10 overflow-hidden">
-    <div className="p-5">
-      <h3 className="text-base font-semibold text-emerald-900 mb-1">{title}</h3>
-      {description && (
-        <p className="text-xs text-emerald-600/80 mb-4">{description}</p>
-      )}
-      <div className="h-[250px]">{children}</div>
-    </div>
+  <div className="flex items-center justify-center w-full h-full p-4">
+    <div className="w-full h-full">{children}</div>
   </div>
 );
 
@@ -44,65 +38,85 @@ const FinancialCharts = ({ data }) => {
 
   const renderHeatmap = (plotInfo) => {
     console.log("Rendering heatmap with:", plotInfo);
-    if (!plotInfo?.parameters?.values) {
-      console.warn("Missing values for heatmap");
+    if (!plotInfo?.parameters?.data || !plotInfo?.parameters?.names) {
+      console.warn("Missing data or names for heatmap");
       return null;
     }
 
-    const { values, x_axis, y_axis } = plotInfo.parameters;
+    // Standard heatmap format:
+    // data: 2D array [[row1vals], [row2vals]]
+    // names: array of labels for both axes
+    const { data, names } = plotInfo.parameters;
+    const chartData = [];
 
     // Create chart data from the 2D array
-    const chartData = [];
-    values.forEach((row, rowIndex) => {
+    data.forEach((row, rowIndex) => {
       if (Array.isArray(row)) {
         row.forEach((value, colIndex) => {
           chartData.push({
-            x: x_axis[rowIndex],
-            y: y_axis[rowIndex],
-            value: value,
+            x: names[colIndex] || `Column ${colIndex + 1}`,
+            y: names[rowIndex + row.length] || `Row ${rowIndex + 1}`,
+            value: value || 0,
           });
         });
       }
     });
 
-    console.log("Heatmap chart data:", chartData);
-
-    const maxValue = Math.max(...values.flat());
+    // Calculate color based on value ratio
+    const maxValue = Math.max(
+      ...data.flat().filter((v) => v !== undefined && v !== null)
+    );
     const getColor = (value) => {
       const ratio = value / maxValue;
-      const r = Math.round(255 * ratio);
-      const g = Math.round(100 * (1 - ratio));
-      const b = Math.round(100 * (1 - ratio));
-      return `rgb(${r},${g},${b})`;
+      return `rgb(${Math.round(255 * ratio)},${Math.round(
+        100 * (1 - ratio)
+      )},${Math.round(100 * (1 - ratio))})`;
     };
 
     return (
       <ChartContainer
-        title={plotInfo.parameters.title}
-        description={plotInfo.description}
+        title={plotInfo.parameters.title || "Chart"}
+        description={plotInfo.description || ""}
       >
-        <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 20, right: 30, bottom: 40, left: 40 }}>
-            <CartesianGrid strokeDasharray="3 3" />
+        <ResponsiveContainer width="100%" height={350}>
+          <ScatterChart margin={{ top: 20, right: 30, bottom: 80, left: 60 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
               type="category"
               dataKey="x"
-              name="Period"
-              label={{ value: "Period", position: "bottom", offset: 20 }}
+              name="Category"
+              label={{
+                value: plotInfo.parameters.labels?.[0] || "Category",
+                position: "bottom",
+                offset: 60,
+              }}
+              tick={{ angle: -45, textAnchor: "end", dy: 20, fontSize: 12 }}
+              height={80}
+              stroke="#666"
             />
             <YAxis
               type="category"
               dataKey="y"
               name="Category"
               label={{
-                value: "Category",
+                value: plotInfo.parameters.labels?.[1] || "Category",
                 angle: -90,
                 position: "left",
-                offset: 20,
+                offset: 40,
+              }}
+              stroke="#666"
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip
+              formatter={(value) => [`$${value.toLocaleString()}`, "Amount"]}
+              contentStyle={{
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "8px",
+                border: "1px solid #f0f0f0",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
               }}
             />
-            <Tooltip formatter={(value) => [`£${value}`, "Amount"]} />
-            <Scatter data={chartData} fill="#8884d8">
+            <Scatter data={chartData}>
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
@@ -119,43 +133,79 @@ const FinancialCharts = ({ data }) => {
 
   const renderPieChart = (plotInfo) => {
     console.log("Rendering pie chart with:", plotInfo);
-    if (!plotInfo?.parameters?.values || !plotInfo?.parameters?.labels) {
-      console.warn("Missing values or labels for pie chart");
+    if (!plotInfo?.parameters?.data || !plotInfo?.parameters?.labels) {
+      console.warn("Missing data or labels for pie chart");
       return null;
     }
 
-    const chartData = plotInfo.parameters.labels.map((label, idx) => ({
-      name: label,
-      value: plotInfo.parameters.values[idx],
-    }));
+    // Standard pie chart format:
+    // data: array of values
+    // labels/names: array of labels
+    // colors: array of colors
+    const data = Array.isArray(plotInfo.parameters.data)
+      ? plotInfo.parameters.data
+      : [];
+    const labels =
+      plotInfo.parameters.labels || plotInfo.parameters.names || [];
+    const colors = plotInfo.parameters.colors || [];
+
+    const chartData = labels
+      .map((label, idx) => ({
+        name: label,
+        value: data[idx] || 0,
+      }))
+      .filter((item) => item.value !== 0);
 
     return (
       <ChartContainer
-        title={plotInfo.parameters.title}
-        description={plotInfo.description}
+        title={plotInfo.parameters.title || "Chart"}
+        description={plotInfo.description || ""}
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={350}>
           <PieChart>
             <Pie
               data={chartData}
               cx="50%"
               cy="50%"
               labelLine={true}
-              outerRadius={80}
+              outerRadius={120}
+              innerRadius={60}
               fill="#8884d8"
               dataKey="value"
               nameKey="name"
-              label={({ name, value }) => `${name}: £${value.toFixed(2)}`}
+              label={({ name, value, percent }) =>
+                `${name}: $${value.toLocaleString()} (${(percent * 100).toFixed(
+                  0
+                )}%)`
+              }
+              paddingAngle={2}
             >
               {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  fill={colors[index] || COLORS[index % COLORS.length]}
+                  stroke="#fff"
+                  strokeWidth={2}
                 />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => `£${value.toFixed(2)}`} />
-            <Legend verticalAlign="bottom" height={30} />
+            <Tooltip
+              formatter={(value) => `$${value.toLocaleString()}`}
+              contentStyle={{
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "8px",
+                border: "1px solid #f0f0f0",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+              }}
+            />
+            <Legend
+              verticalAlign="bottom"
+              height={36}
+              iconType="circle"
+              formatter={(value) => (
+                <span className="text-sm font-medium">{value}</span>
+              )}
+            />
           </PieChart>
         </ResponsiveContainer>
       </ChartContainer>
@@ -164,52 +214,84 @@ const FinancialCharts = ({ data }) => {
 
   const renderLineChart = (plotInfo) => {
     console.log("Rendering line chart with:", plotInfo);
-    if (!plotInfo?.parameters?.x_axis || !plotInfo?.parameters?.y_axis) {
-      console.warn("Missing axes for line chart");
+    if (!plotInfo?.parameters) {
+      console.warn("Missing parameters for line chart");
       return null;
     }
 
-    const chartData = plotInfo.parameters.x_axis.map((x, idx) => ({
-      name: x.toString(),
-      value: plotInfo.parameters.y_axis[idx],
-    }));
+    const xAxis = plotInfo.parameters["x axis"] || [];
+    const yValues = plotInfo.parameters["y axis"] || [];
+    const colors = plotInfo.parameters.colors || [];
+
+    const chartData = xAxis
+      .map((x, idx) => ({
+        name: x.toString(),
+        value: yValues[idx] || 0,
+      }))
+      .filter((item) => item.value !== 0);
 
     return (
       <ChartContainer
-        title={plotInfo.parameters.title}
-        description={plotInfo.description}
+        title={plotInfo.parameters.title || "Chart"}
+        description={plotInfo.description || ""}
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={350}>
           <LineChart
             data={chartData}
-            margin={{ top: 20, right: 30, bottom: 40, left: 40 }}
+            margin={{ top: 20, right: 30, bottom: 80, left: 60 }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
               dataKey="name"
               label={{
-                value: plotInfo.parameters.x_label || "Date",
+                value: plotInfo.parameters.labels?.x || "Category",
                 position: "bottom",
-                offset: 20,
+                offset: 60,
               }}
+              tick={{ angle: -45, textAnchor: "end", dy: 20, fontSize: 12 }}
+              height={80}
+              stroke="#666"
             />
             <YAxis
               label={{
-                value: plotInfo.parameters.y_label || "Value (£)",
+                value: plotInfo.parameters.labels?.y || "Amount ($)",
                 angle: -90,
                 position: "left",
-                offset: 20,
+                offset: 40,
+              }}
+              stroke="#666"
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip
+              formatter={(value) => `$${value.toFixed(2)}`}
+              contentStyle={{
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                borderRadius: "8px",
+                border: "none",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
               }}
             />
-            <Tooltip formatter={(value) => `£${value.toFixed(2)}`} />
-            <Legend verticalAlign="top" height={36} />
-            <Line
-              type="monotone"
-              dataKey="value"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-              name={plotInfo.parameters.title}
+            <Legend
+              verticalAlign="top"
+              height={36}
+              iconType="circle"
+              formatter={(value) => (
+                <span className="text-sm font-medium">{value}</span>
+              )}
             />
+            {chartData.map((_, index) => (
+              <Line
+                key={`line-${index}`}
+                type="monotone"
+                dataKey="value"
+                stroke={colors[index] || COLORS[index % COLORS.length]}
+                activeDot={{ r: 8 }}
+                name={
+                  plotInfo.parameters.names?.[index] || `Value ${index + 1}`
+                }
+                strokeWidth={2}
+              />
+            ))}
           </LineChart>
         </ResponsiveContainer>
       </ChartContainer>
@@ -218,50 +300,83 @@ const FinancialCharts = ({ data }) => {
 
   const renderBarChart = (plotInfo) => {
     console.log("Rendering bar chart with:", plotInfo);
-    if (!plotInfo?.parameters?.x_axis || !plotInfo?.parameters?.y_axis) {
-      console.warn("Missing axes for bar chart");
+    if (!plotInfo?.parameters) {
+      console.warn("Missing parameters for bar chart");
       return null;
     }
 
-    const chartData = plotInfo.parameters.x_axis.map((x, idx) => ({
-      name: x.toString(),
-      value: plotInfo.parameters.y_axis[idx],
-    }));
+    // Standard bar chart format:
+    // x axis: array of category labels
+    // height: array of values
+    // colors: array of colors
+    const xAxis = plotInfo.parameters["x axis"] || [];
+    const values = plotInfo.parameters.height || [];
+    const colors = plotInfo.parameters.colors || [];
+
+    const chartData = xAxis
+      .map((x, idx) => ({
+        name: x.toString(),
+        value: values[idx] || 0,
+      }))
+      .filter((item) => item.value !== 0);
 
     return (
       <ChartContainer
-        title={plotInfo.parameters.title}
-        description={plotInfo.description}
+        title={plotInfo.parameters.title || "Chart"}
+        description={plotInfo.description || ""}
       >
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart
             data={chartData}
-            margin={{ top: 20, right: 30, bottom: 40, left: 40 }}
+            margin={{ top: 20, right: 30, bottom: 80, left: 60 }}
+            barSize={40}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
               dataKey="name"
               label={{
-                value: plotInfo.parameters.x_label || "Date",
+                value: plotInfo.parameters.labels?.[0] || "Category",
                 position: "bottom",
-                offset: 20,
+                offset: 50,
               }}
+              tick={{ angle: -45, textAnchor: "end", dy: 20, fontSize: 12 }}
+              height={80}
+              stroke="#666"
             />
             <YAxis
               label={{
-                value: plotInfo.parameters.y_label || "Value (£)",
+                value: "Amount ($)",
                 angle: -90,
                 position: "left",
-                offset: 20,
+                offset: 40,
+              }}
+              stroke="#666"
+              tick={{ fontSize: 12 }}
+            />
+            <Tooltip
+              formatter={(value) => `$${value.toLocaleString()}`}
+              contentStyle={{
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                borderRadius: "8px",
+                border: "1px solid #f0f0f0",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
               }}
             />
-            <Tooltip formatter={(value) => `£${value.toFixed(2)}`} />
-            <Legend verticalAlign="top" height={36} />
-            <Bar
-              dataKey="value"
-              fill="#8884d8"
-              name={plotInfo.parameters.title}
+            <Legend
+              verticalAlign="top"
+              height={36}
+              formatter={(value) => (
+                <span className="text-sm font-medium">{value}</span>
+              )}
             />
+            <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={colors[index] || COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </ChartContainer>
@@ -270,50 +385,69 @@ const FinancialCharts = ({ data }) => {
 
   const renderScatterPlot = (plotInfo) => {
     console.log("Rendering scatter plot with:", plotInfo);
-    if (!plotInfo?.parameters?.x_axis || !plotInfo?.parameters?.y_axis) {
-      console.warn("Missing axes for scatter plot");
+    if (!plotInfo?.parameters) {
+      console.warn("Missing parameters for scatter plot");
       return null;
     }
 
-    const chartData = plotInfo.parameters.x_axis.map((x, idx) => ({
-      x: x,
-      y: plotInfo.parameters.y_axis[idx],
+    // Get data arrays
+    const xValues = plotInfo.parameters["x axis"] || [];
+    const yValues = plotInfo.parameters["y axis"] || [];
+    const pointLabels = plotInfo.parameters.labels || [];
+    const legendLabels = plotInfo.parameters.legend || [];
+
+    // Create data points
+    const chartData = xValues.map((x, idx) => ({
+      x,
+      y: yValues[idx],
+      name: pointLabels[idx],
+      category: legendLabels[idx],
     }));
+
+    console.log("Scatter plot data:", chartData);
 
     return (
       <ChartContainer
         title={plotInfo.parameters.title}
         description={plotInfo.description}
       >
-        <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 20, right: 30, bottom: 40, left: 40 }}>
+        <ResponsiveContainer width="100%" height={400}>
+          <ScatterChart margin={{ top: 20, right: 30, bottom: 80, left: 60 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
+              type="number"
               dataKey="x"
-              name={plotInfo.parameters.x_label || "X"}
-              label={{
-                value: plotInfo.parameters.x_label || "Date",
-                position: "bottom",
-                offset: 20,
-              }}
+              name="Wages"
+              label={{ value: "Wages ($)", position: "bottom", offset: 50 }}
+              tickFormatter={(value) => `$${value.toLocaleString()}`}
             />
             <YAxis
+              type="number"
               dataKey="y"
-              name={plotInfo.parameters.y_label || "Y"}
+              name="Tax"
               label={{
-                value: plotInfo.parameters.y_label || "Value (£)",
+                value: "Tax ($)",
                 angle: -90,
                 position: "left",
-                offset: 20,
+                offset: 40,
               }}
+              tickFormatter={(value) => `$${value.toLocaleString()}`}
             />
-            <Tooltip formatter={(value) => `£${value.toFixed(2)}`} />
-            <Legend verticalAlign="top" height={36} />
-            <Scatter
-              name={plotInfo.parameters.title}
-              data={chartData}
-              fill="#8884d8"
+            <Tooltip
+              formatter={(value) => `$${value.toLocaleString()}`}
+              labelFormatter={(label) => `${label}`}
             />
+            <Legend />
+            {chartData.map((point, index) => (
+              <Scatter
+                key={`scatter-${index}`}
+                name={point.category}
+                data={[point]}
+                fill={COLORS[index % COLORS.length]}
+              >
+                <Cell r={6} />
+              </Scatter>
+            ))}
           </ScatterChart>
         </ResponsiveContainer>
       </ChartContainer>
@@ -325,48 +459,92 @@ const FinancialCharts = ({ data }) => {
     return null;
   }
 
-  // Group charts by type for better layout
-  const chartsByType = Object.entries(data).reduce((acc, [name, info]) => {
-    const type = info.type.toLowerCase().replace(/\s+/g, "");
-    if (!acc[type]) acc[type] = [];
-    acc[type].push({ name, info });
+  // Process the nested data structure
+  const processedData = Object.entries(data).reduce((acc, [key, value]) => {
+    console.log("Processing chart key:", key);
+    console.log("Chart value:", value);
+
+    // Handle both direct and nested key structures
+    const chartInfo = value[Object.keys(value)[0]] || value;
+    console.log("Chart info:", chartInfo);
+
+    if (chartInfo) {
+      acc[key] = {
+        type: chartInfo.type,
+        description: chartInfo.description,
+        parameters: chartInfo.parameters,
+      };
+    }
     return acc;
   }, {});
 
+  console.log("Processed data:", processedData);
+
+  // Group charts by type
+  const chartsByType = Object.entries(processedData).reduce(
+    (acc, [name, info]) => {
+      const type = info.type.toLowerCase().replace(/\s+/g, "");
+      console.log("Chart type after normalization:", type);
+
+      if (!acc[type]) acc[type] = [];
+      acc[type].push({ name, info });
+      return acc;
+    },
+    {}
+  );
+
+  console.log("Charts by type:", chartsByType);
+
   return (
-    <div className="space-y-6">
-      {/* Overview charts (pie and bar) */}
-      {(chartsByType.piechart || chartsByType.barchart) && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {chartsByType.piechart?.map(({ name, info }) => (
-            <div key={name}>{renderPieChart(info)}</div>
-          ))}
-          {chartsByType.barchart?.map(({ name, info }) => (
-            <div key={name}>{renderBarChart(info)}</div>
-          ))}
-        </div>
-      )}
+    <div className="w-full h-full">
+      {/* Render all chart types */}
+      {Object.entries(chartsByType).map(([type, charts]) => {
+        console.log("Rendering chart type:", type);
+        console.log("Charts for this type:", charts);
 
-      {/* Trend charts (line) */}
-      {chartsByType.linechart && (
-        <div className="grid grid-cols-1 gap-4">
-          {chartsByType.linechart.map(({ name, info }) => (
-            <div key={name}>{renderLineChart(info)}</div>
-          ))}
-        </div>
-      )}
+        return (
+          <div key={type} className="h-full">
+            {charts.map(({ name, info }) => {
+              // Convert type to lowercase and remove spaces for matching
+              const normalizedType = type.toLowerCase().replace(/\s+/g, "");
+              console.log(
+                "Processing chart type:",
+                normalizedType,
+                "for chart:",
+                name
+              );
 
-      {/* Analysis charts (heatmap and scatter) */}
-      {(chartsByType.heatmap || chartsByType.scatterplot) && (
-        <div className="grid grid-cols-1 gap-4">
-          {chartsByType.heatmap?.map(({ name, info }) => (
-            <div key={name}>{renderHeatmap(info)}</div>
-          ))}
-          {chartsByType.scatterplot?.map(({ name, info }) => (
-            <div key={name}>{renderScatterPlot(info)}</div>
-          ))}
-        </div>
-      )}
+              let ChartComponent = null;
+              switch (normalizedType) {
+                case "piechart":
+                  ChartComponent = renderPieChart(info);
+                  break;
+                case "barchart":
+                  ChartComponent = renderBarChart(info);
+                  break;
+                case "linechart":
+                  ChartComponent = renderLineChart(info);
+                  break;
+                case "scatterplot":
+                  ChartComponent = renderScatterPlot(info);
+                  break;
+                case "heatmap":
+                  ChartComponent = renderHeatmap(info);
+                  break;
+                default:
+                  console.warn("Unknown chart type:", type);
+                  break;
+              }
+
+              return ChartComponent ? (
+                <div key={name} className="h-full">
+                  {ChartComponent}
+                </div>
+              ) : null;
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 };
