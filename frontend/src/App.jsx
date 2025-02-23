@@ -12,6 +12,7 @@ import ChatPage from "./pages/ChatPage";
 import CallPage from "./pages/CallPage";
 import SummaryPage from "./pages/SummaryPage";
 import InsightsPage from "./pages/InsightsPage";
+import BenfordAnalysisPage from "./pages/BenfordAnalysisPage";
 import "./index.css";
 
 function App() {
@@ -53,6 +54,15 @@ function App() {
           element={
             <Layout>
               <SummaryPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/benford"
+          element={
+            <Layout>
+              <BenfordAnalysisPage />
             </Layout>
           }
         />

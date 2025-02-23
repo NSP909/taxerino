@@ -8,6 +8,7 @@ import {
   PhoneIcon,
   ChartBarIcon,
   DocumentChartBarIcon,
+  ChartPieIcon,
 } from "@heroicons/react/24/outline";
 
 const navItems = [
@@ -15,6 +16,7 @@ const navItems = [
   { name: "Documents", icon: DocumentTextIcon, path: "/documents" },
   { name: "Tax Insights", icon: ChartBarIcon, path: "/insights" },
   { name: "Tax Summary", icon: DocumentChartBarIcon, path: "/summary" },
+  { name: "Benford Analysis", icon: ChartPieIcon, path: "/benford" },
   { name: "Tax Chat", icon: ChatBubbleLeftRightIcon, path: "/chat" },
   { name: "Call", icon: PhoneIcon, path: "/call" },
   { name: "Forms", icon: DocumentDuplicateIcon, path: "/forms" },

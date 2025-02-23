@@ -136,14 +136,20 @@ def remove_file_data(filename):
         return False
 
 def get_current_tax_data():
-    """
-    Retrieve the current tax data document from MongoDB.
-    """
     try:
-        data = tax_data_collection.find_one({'_id': 'current_tax_data'})
+        data = tax_data_collection.find_one(
+            {'_id': 'current_tax_data'},
+            projection={'timestamp': 0}  # Exclude timestamp if you don't need it
+        )
         if data:
-            # Remove MongoDB's _id field from the response
+            # Remove MongoDB's _id field
             data.pop('_id', None)
+            
+            # Convert any remaining datetime objects to ISO format strings
+            for key, value in dict(data).items():
+                if isinstance(value, datetime):
+                    data[key] = value.isoformat()
+                    
             # Remove empty fields
             return {k: v for k, v in data.items() if v}
         return {}
@@ -304,26 +310,53 @@ def get_tax_summary():
         return error_response, 500
     
 @app.route('/api/get-benford-data', methods=['GET'])
-def get_tax_plots():
+def get_benford_data():
     """
     Generate plot data from the tax data using LLM.
     """
     try:
         # Get current tax data
         update_info_json()
-        plot_data = analyze_benfords_law()
+
+        with open("info.json", 'r') as file:
+            tax_data = json.load(file)
+        plot_data = analyze_benfords_law(tax_data)
+        print("Benford analysis plot_data:", json.dumps(plot_data, indent=2))  # Debug log
+        
+        # Generate summary using OpenAI
+        similarity_score = plot_data['similarity_score']
+        risk_level = "normal" if similarity_score >= 0.8 else "moderate" if similarity_score >= 0.5 else "high"
+        
+        prompt = f"""Analyze this Benford's Law data and provide a concise summary:
+- Similarity Score: {similarity_score}
+- Risk Level: {risk_level}
+- Number of data points: {len(plot_data['first_digits'])}
+
+Focus on implications and recommendations. Keep it brief and clear."""
+
+        summary_response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a financial analysis expert providing concise summaries of Benford's Law analysis results."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=200
+        )
+        
+        summary = summary_response.choices[0].message.content
         
         return {
             "benford_data": plot_data,
+            "summary": summary,
             "status": "success"
         }, 200
         
     except Exception as e:
-        print(f"Error in tax plots endpoint: {str(e)}")
+        print(f"Error in Benford analysis: {str(e)}")
         return {
-            "error": "Failed to generate plot data",
-            "status": "error",
-            "details": str(e)
+            "error": str(e),
+            "status": "error"
         }, 500
     
 @app.route('/api/tax-plots', methods=['GET'])
