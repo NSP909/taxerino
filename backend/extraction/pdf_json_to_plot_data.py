@@ -66,10 +66,12 @@ def generate_plot_values_from_provided_data(input_json):
              - colors: the colors of the plot
              - legend: the legend of the plot
 
-            Give me a dictionary of the best visualizations that I can use to pitch to my client and how it will be useful to them. The output MUST be in 
-            the following format: 
+            Give me a dictionary of the best visualizations that I can use to pitch to my client and how it will be useful to them.
+            The output MUST follow the following rules: 
             
             # NO VALUES, ALL THE DATA MUST BE TEXT DESCRBING THE VALUES CORRESPONDING TO THAT PARAMETER
+            # ONLY PRODUCE 3-5 MEANINGFUL GRAPHS, NO MORE, NO LESS. 
+            # MAKE SURE TO PRODUCE ONLY DISCTINCT GRAPHS, NO DUPLICATES, AND BE MORE DESCRIPTIVE
             # do not return any extra information, just the json format information
             
             Please follow this format STRICTLY
