@@ -7,6 +7,7 @@ import {
   CogIcon,
   PhoneIcon,
   ChartPieIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
 
@@ -45,6 +46,11 @@ const pageConfig = {
     icon: ChartPieIcon,
     title: "Benford's Law Analysis",
     description: "Analyze numerical patterns in your financial data",
+  },
+  "/anomalies": {
+    icon: ExclamationTriangleIcon,
+    title: "Tax Anomalies",
+    description: "Review detected inconsistencies in your tax documents",
   },
 };
 

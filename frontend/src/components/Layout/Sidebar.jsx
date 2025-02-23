@@ -9,6 +9,7 @@ import {
   ChartBarIcon,
   DocumentChartBarIcon,
   ChartPieIcon,
+  ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
 
 const navItems = [
@@ -17,6 +18,7 @@ const navItems = [
   { name: "Tax Insights", icon: ChartBarIcon, path: "/insights" },
   { name: "Tax Summary", icon: DocumentChartBarIcon, path: "/summary" },
   { name: "Benford Analysis", icon: ChartPieIcon, path: "/benford" },
+  { name: "Anomalies", icon: ExclamationTriangleIcon, path: "/anomalies" },
   { name: "Tax Chat", icon: ChatBubbleLeftRightIcon, path: "/chat" },
   { name: "Call", icon: PhoneIcon, path: "/call" },
   { name: "Forms", icon: DocumentDuplicateIcon, path: "/forms" },

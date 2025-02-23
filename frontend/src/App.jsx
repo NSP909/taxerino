@@ -13,6 +13,7 @@ import CallPage from "./pages/CallPage";
 import SummaryPage from "./pages/SummaryPage";
 import InsightsPage from "./pages/InsightsPage";
 import BenfordAnalysisPage from "./pages/BenfordAnalysisPage";
+import AnomaliesPage from "./pages/AnomaliesPage";
 import "./index.css";
 
 function App() {
@@ -63,6 +64,15 @@ function App() {
           element={
             <Layout>
               <BenfordAnalysisPage />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/anomalies"
+          element={
+            <Layout>
+              <AnomaliesPage />
             </Layout>
           }
         />

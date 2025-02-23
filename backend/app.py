@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from document_upload_methods import DocumentHandler
 import os
@@ -12,6 +12,8 @@ from datetime import datetime
 from tax_summary import generate_tax_summary
 from extraction.pdf_json_to_plot_data import generate_plot_values_from_provided_data
 from benford import analyze_benfords_law
+from anthropic import Anthropic
+from extraction.find_anomalies import anomaly_detection
 
 app = Flask(__name__)
 load_dotenv()
@@ -130,6 +132,7 @@ def remove_file_data(filename):
             print(f"No files remaining, cleared all tax data and cache")
         
         print(f"Successfully removed data for file: {filename}")
+        update_info_json()
         return True
     except Exception as e:
         print(f"Error removing file data: {str(e)}")
@@ -182,6 +185,7 @@ def extract_text_from_pdf(pdf_path):
     # Convert PDF to images
     images_array = pdf_to_images(pdf_path)
     responses = []
+    anthropic = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
     # Process each image
     for image_path in images_array:
@@ -189,34 +193,39 @@ def extract_text_from_pdf(pdf_path):
         base64_image = encode_image(image_path)
         
         try:
-            response = client.chat.completions.create(
-                model="gpt-4o",  # Correct model name
+            response = anthropic.messages.create(
+                model="claude-3-5-sonnet-20241022",
+                max_tokens=1000,
                 messages=[
-                    {
-                        "role": "system",
-                        "content": """You are a tax expert. You will be provided with a document image, and your task is to extract all the text from it. 
-                        Please don't add any additional information. Also only extract information from documents which are in the form of tax documents/bank statments etc instead of just plain text.
-                        Also I want you to process the output in the form of a json schema with as many fields as possible with values. 
-                        There is no defined schema you need to extract as much info as you can in a json schema."""
-                    },
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": "Extract all the info from this and give me back a json and not a string"},
                             {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": f"data:image/jpeg;base64,{base64_image}"
+                                "type": "text",
+                                "text": """You are a tax expert. You will be provided with a document image, and your task is to extract all the text from it. 
+                                Please don't add any additional information. Also only extract information from documents which are in the form of tax documents/bank statements etc instead of just plain text.
+                                Also I want you to process the output in the form of a json schema with as many fields as possible with values. 
+                                There is no defined schema you need to extract as much info as you can in a json schema. Only return the information
+                                that exists as a NUMERICAL VALUE. If the value is not a number, then don't include it.
+                                BE AS PRECISE AS POSSIBLE.
+                                Take your time, the decision is yours, extract all the info CORRECTLY from this and give me back a json and not a string"""
+                            },
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/png",
+                                    "data": base64_image
                                 }
                             }
                         ]
                     }
-                ],
-                max_tokens=1000
+                ]
             )
 
-            # Extract content from the response object correctly
-            responses.append(response.choices[0].message.content)
+            # Extract content from the response
+            responses.append(response.content[0].text)
+            
         except Exception as e:
             print(f"Error processing image {image_path}: {str(e)}")
             
@@ -226,9 +235,10 @@ def extract_text_from_pdf(pdf_path):
             os.remove(image_path)
         except Exception as e:
             print(f"Error removing temporary file {image_path}: {str(e)}")
+            
     # Join text from all pages
     extracted_text = "\n\n".join(responses)
-    return extracted_text[7:len(extracted_text)-3]
+    return extracted_text
 
 # Handle GET and DELETE requests for documents
 @app.route('/api/documents/<filename>', methods=['GET', 'DELETE'])
@@ -450,7 +460,92 @@ def save_plot_debug_data():
     except Exception as e:
         print(f"Error in save plot debug data endpoint: {str(e)}")
         return {"error": "Failed to save debug data", "details": str(e)}, 500
+    
+@app.route('/api/anomalies', methods=['GET'])
+def get_anomalies():
+    """
+    Get anomalies from the tax data using LLM.
+    """
+    try:
+        # Update info.json with current data
+        print("Starting anomaly detection...")
+        update_info_json()
+        
+        # Check if info.json exists and read its contents
+        if not os.path.exists("info.json"):
+            print("info.json does not exist")
+            return jsonify({
+                "status": "empty",
+                "message": "No tax data available for analysis"
+            })
+        
+        # Load tax data
+        try:
+            with open("info.json", 'r') as file:
+                tax_data = json.load(file)
+                print("Loaded tax data:", json.dumps(tax_data, indent=2))
+        except json.JSONDecodeError as e:
+            print(f"Error parsing info.json: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "error": "Invalid tax data format"
+            })
+        
+        # Check if tax data is empty
+        if not tax_data:
+            print("Tax data is empty")
+            return jsonify({
+                "status": "empty",
+                "message": "No tax data available for analysis"
+            })
 
+        # Get anomalies
+        try:
+            anomalies = anomaly_detection(tax_data)
+            print("Generated anomalies:", json.dumps(anomalies, indent=2))
+            
+            if not isinstance(anomalies, dict):
+                print("Invalid anomalies format: not a dictionary")
+                return jsonify({
+                    "status": "error",
+                    "error": "Invalid anomalies format returned from analysis"
+                })
+
+            if not anomalies:  # Check if anomalies is empty
+                print("No anomalies detected")
+                return jsonify({
+                    "status": "success",
+                    "data": {}
+                })
+
+            # Validate anomalies structure
+            for field, data in anomalies.items():
+                if not isinstance(data, dict) or 'source_details' not in data or 'anomaly_details' not in data:
+                    print(f"Invalid anomaly structure for field {field}")
+                    return jsonify({
+                        "status": "error",
+                        "error": f"Invalid anomaly structure for field {field}"
+                    })
+
+            # Return the response
+            return jsonify({
+                "status": "success",
+                "data": anomalies
+            })
+        except Exception as e:
+            print(f"Error in anomaly detection: {str(e)}")
+            return jsonify({
+                "status": "error",
+                "error": f"Error in anomaly detection: {str(e)}"
+            })
+
+    except Exception as e:
+        print(f"Error in anomalies endpoint: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        })
+    
 if __name__ == '__main__':
     print("Server starting... Upload folder:", os.path.abspath(UPLOAD_FOLDER))
     app.run(debug=True, port=5000)
