@@ -43,12 +43,23 @@ def el_filler(form, data):
                 child_tax_credits= data["child_tax_credits"],
                 dependent_credits= data["dependent_credits"],
                 total_credits= data["total_credits"],
+                other_income= data["other_income"],
+                deductions= data["deductions"],
+                extra_withholding= data["extra_withholding"],
                 employer_info= data["employer_info"],
                 employment_date= data["employment_date"],
                 employer_ein= data["employer_ein"],
                 pay_periods= data["pay_periods"],
                 itemized_deductions= data["itemized_deductions"],
                 standard_deduction= data["standard_deduction"],
+                deduction_difference= data["deduction_difference"],
+                other_adjustments= data["other_adjustments"],
+                total_adjustments= data["total_adjustments"],
+                two_jobs_value= data["two_jobs_value"],
+                three_jobs_highest= data["three_jobs_highest"],
+                three_jobs_third= data["three_jobs_third"],
+                total_jobs_value= data["total_jobs_value"],
+                per_period_value= data["per_period_value"]
 
             )
         elif form == "W-8BEN":

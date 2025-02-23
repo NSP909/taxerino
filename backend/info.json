@@ -1,11 +1,13 @@
 {
     "bank": {
-        "name": "Commerce Bank",
-        "address": "1000 Walnut, Kansas City MO 64106-3686"
+        "name": "Terp Bank",
+        "address": "4000 Stadium Drive, College Park, MD 20742"
     },
     "customer": {
-        "name": "Jane Customer", 
-        "address": "1234 Anywhere Dr., Small Town, MO 12345-6789"
+        "name": "Aditya Singh", 
+        "address": "3854 Stadium Drive, College Park, MD 20742",
+        "SSN":"123-45-6789",
+        "EIN":"12-3456789"
     },
     "statement": {
         "primaryAccountNumber": "000009752",
