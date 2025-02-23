@@ -72,25 +72,27 @@ def fill_w9_form(
     })
 
     # Fill and save the form
-    filled_form = PdfWrapper("w9.pdf").fill(form_data)
-    with open("filled_w9.pdf", "wb+") as output:
+    filled_form = PdfWrapper("/Users/priyadarshannarayanasamy/Desktop/hacklytics/taxerino/backend/form_filler/templates/w9.pdf").fill(form_data)
+    with open("filled/filled_w9.pdf", "wb+") as output:
         output.write(filled_form.read())
 
 # Example usage
-fill_w9_form(
-    name="John Doe",
-    business_name="Doe Enterprises LLC",
-    tax_classification="llc",
-    llc_classification="C",
-    address="123 Business St",
-    city_state_zip="San Francisco, CA 94105",
-     exempt_payee_code="123",
-     fatca_code="456",
-    requester_info="IRS",
-    account_numbers="12345",
-    ssn_first="123",
-    ssn_second="45",
-    ssn_third="6789",
-    ein_first="12",
-    ein_second="3456789"
-)
+if __name__=="__main__":
+
+    fill_w9_form(
+        name="John Doe",
+        business_name="Doe Enterprises LLC",
+        tax_classification="llc",
+        llc_classification="C",
+        address="123 Business St",
+        city_state_zip="San Francisco, CA 94105",
+        exempt_payee_code="123",
+        fatca_code="456",
+        requester_info="IRS",
+        account_numbers="12345",
+        ssn_first="123",
+        ssn_second="45",
+        ssn_third="6789",
+        ein_first="12",
+        ein_second="3456789"
+    )

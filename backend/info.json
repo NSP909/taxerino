@@ -1,0 +1,72 @@
+{
+    "bank": {
+        "name": "Commerce Bank",
+        "address": "1000 Walnut, Kansas City MO 64106-3686"
+    },
+    "customer": {
+        "name": "Jane Customer", 
+        "address": "1234 Anywhere Dr., Small Town, MO 12345-6789"
+    },
+    "statement": {
+        "primaryAccountNumber": "000009752",
+        "statementDate": "June 5, 2003",
+        "pageNumber": 1
+    },
+    "accountSummary": {
+        "accountNumber": "000009752",
+        "beginningBalance": "$7,126.11",
+        "depositsCredits": "+3,615.08",
+        "atmWithdrawalsDebits": "-20.00",
+        "visaCheckCardPurchasesDebits": "-0.00",
+        "withdrawalsOtherDebits": "-0.00", 
+        "checksPaid": "-200.00",
+        "endingBalance": "$10,521.19"
+    },
+    "depositsCredits": {
+        "total": "$3,615.08",
+        "transactions": [
+            {
+                "description": "Deposit",
+                "refNumber": "130012345",
+                "dateCredited": "05-15",
+                "amount": "$3,615.08"
+            }
+        ]
+    },
+    "atmWithdrawalsDebits": {
+        "total": "$20.00",
+        "transactions": [
+            {
+                "description": "ATM Withdrawal",
+                "location": "1000 Walnut St, Kansas City MO",
+                "machineNumber": "M119 00005678",
+                "tranDate": "05-18",
+                "datePaid": "05-19",
+                "amount": "$20.00"
+            }
+        ]
+    },
+    "checksPaid": {
+        "total": "$305.00",
+        "transactions": [
+            {
+                "datePaid": "05-12",
+                "checkNumber": "1001", 
+                "amount": "75.00",
+                "referenceNumber": "00012576589"
+            },
+            {
+                "datePaid": "05-18",
+                "checkNumber": "1002",
+                "amount": "30.00",
+                "referenceNumber": "00036547854"
+            },
+            {
+                "datePaid": "05-24",
+                "checkNumber": "1003",
+                "amount": "200.00",
+                "referenceNumber": "00094613547"
+            }
+        ]
+    }
+ }

@@ -64,27 +64,28 @@ def fill_w8ben_form(
     }
 
     # Fill and save the form
-    filled_form = PdfWrapper("w8ben.pdf").fill(form_data)
-    with open("filled_w8ben.pdf", "wb+") as output:
+    filled_form = PdfWrapper("/Users/priyadarshannarayanasamy/Desktop/hacklytics/taxerino/backend/form_filler/templates/w8ben.pdf").fill(form_data)
+    with open("filled/filled_w8ben.pdf", "wb+") as output:
         output.write(filled_form.read())
 
 # Example usage
-fill_w8ben_form(
-    name="John Smith",
-    country_citizenship="United Kingdom",
-    perm_address="123 Oxford Street",
-    perm_city_state_zip="London, W1D 1DF",
-    perm_country="United Kingdom",
-    mailing_country="United Kingdom",
-    mailing_address="abc street",
-    mailing_city_state_zip="Reading, RG5HF",
-    ssn_itin="123-45-6789",
-    foreign_tax_id="GB123456789",
-    date_of_birth="1980-01-01",
-    country_residence="United Kingdom",
-    treaty_article="Article 15",
-    withholding_rate="15",
-    income_type="Royalties",
-    treaty_article_cite="Income from Employment",
-    treaty_paragraph="Paragraph 2"
-)
+if __name__ == "__main__":
+    fill_w8ben_form(
+        name="John Smith",
+        country_citizenship="United Kingdom",
+        perm_address="123 Oxford Street",
+        perm_city_state_zip="London, W1D 1DF",
+        perm_country="United Kingdom",
+        mailing_country="United Kingdom",
+        mailing_address="abc street",
+        mailing_city_state_zip="Reading, RG5HF",
+        ssn_itin="123-45-6789",
+        foreign_tax_id="GB123456789",
+        date_of_birth="1980-01-01",
+        country_residence="United Kingdom",
+        treaty_article="Article 15",
+        withholding_rate="15",
+        income_type="Royalties",
+        treaty_article_cite="Income from Employment",
+        treaty_paragraph="Paragraph 2"
+    )

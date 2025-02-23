@@ -2,20 +2,20 @@
 %‚„œ”
 1 0 obj
 <<
-/Producer (pypdf)
->>
-endobj
-2 0 obj
-<<
 /Type /Pages
 /Count 4
 /Kids [ 4 0 R 35 0 R 38 0 R 40 0 R ]
 >>
 endobj
+2 0 obj
+<<
+/Producer (pypdf)
+>>
+endobj
 3 0 obj
 <<
 /Type /Catalog
-/Pages 2 0 R
+/Pages 1 0 R
 >>
 endobj
 4 0 obj
@@ -43,12 +43,12 @@ endobj
 /Rotate 0
 /Tabs /S
 /Type /Page
-/Parent 2 0 R
+/Parent 1 0 R
 >>
 endobj
 5 0 obj
 <<
-/Length 25583
+/Length 25796
 >>
 stream
 q
@@ -1758,7 +1758,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 36 664.3008 Tm
-(John Wei) Tj
+(John\040Wei) Tj
 T*
 ET
 BT
@@ -1790,7 +1790,7 @@ q
 1 0 0 1 116.2 642.8559 cm
 BT
 1 0 0 1 0 0 Tm
-(123 Foreign Street\054 Foreign City\054 Foreign Country 12345) Tj
+(123\040Foreign\040Street\054\040Foreign\040City\054\040Foreign\040Country\04012345) Tj
 T*
 ET
 Q
@@ -1803,7 +1803,7 @@ q
 1 0 0 1 346.6 642.8559 cm
 BT
 1 0 0 1 0 0 Tm
-(456 American Ave\054 New York\054 NY 10001) Tj
+(456\040American\040Ave\054\040New\040York\054\040NY\04010001) Tj
 T*
 ET
 Q
@@ -1814,7 +1814,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 418.236 579.3008 Tm
-(F\0551 \050Entered 01\05701\0572024\051) Tj
+(F\0551\040\050Entered\04001\05701\0572024\051) Tj
 T*
 ET
 BT
@@ -1824,7 +1824,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 555.3028 Tm
-(F\0551 Student\054 Changed from J\0551 on 06\05715\0572024) Tj
+(F\0551\040Student\054\040Changed\040from\040J\0551\040on\04006\05715\0572024) Tj
 T*
 ET
 BT
@@ -1834,7 +1834,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 338.4 543.3008 Tm
-(China\054 Canada) Tj
+(China\054\040Canada) Tj
 T*
 ET
 BT
@@ -1844,7 +1844,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 266.4 531.3018 Tm
-(China\054 Canada) Tj
+(China\054\040Canada) Tj
 T*
 ET
 BT
@@ -1854,7 +1854,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 336.924 519.3028 Tm
-(G12345678\054 HK98765432) Tj
+(G12345678\054\040HK98765432) Tj
 T*
 ET
 BT
@@ -1904,7 +1904,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 530.711 459.3018 Tm
-(Columbia University) Tj
+(Columbia\040University) Tj
 T*
 ET
 BT
@@ -1914,7 +1914,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 447.3028 Tm
-(116th St \046 Broadway\054 New York\054 NY 10027) Tj
+(116th\040St\040\046\040Broadway\054\040New\040York\054\040NY\04010027) Tj
 T*
 ET
 BT
@@ -1924,7 +1924,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 435.3008 Tm
-(\050212\051 555\0551234) Tj
+(\050212\051\040555\0551234) Tj
 T*
 ET
 BT
@@ -1934,7 +1934,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 180 411.3028 Tm
-(Dr\056 Jane Wilson) Tj
+(Dr\056\040Jane\040Wilson) Tj
 T*
 ET
 BT
@@ -1944,7 +1944,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 399.3008 Tm
-(Mathematics Dept\054 Columbia University\054 NY 10027) Tj
+(Mathematics\040Dept\054\040Columbia\040University\054\040NY\04010027) Tj
 T*
 ET
 BT
@@ -1954,7 +1954,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 387.3018 Tm
-(\050212\051 555\0555678) Tj
+(\050212\051\040555\0555678) Tj
 T*
 ET
 BT
@@ -2048,7 +2048,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 267.3028 Tm
-(77 Massachusetts Ave\054 Cambridge\054 MA 02139) Tj
+(77\040Massachusetts\040Ave\054\040Cambridge\054\040MA\04002139) Tj
 T*
 ET
 BT
@@ -2058,7 +2058,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 255.3008 Tm
-(\050617\051 555\0551234) Tj
+(\050617\051\040555\0551234) Tj
 T*
 ET
 BT
@@ -2068,7 +2068,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 129.6 231.3028 Tm
-(Dr\056 Robert Brown) Tj
+(Dr\056\040Robert\040Brown) Tj
 T*
 ET
 BT
@@ -2078,7 +2078,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 219.3008 Tm
-(Computer Science Dept\054 MIT\054 MA 02139) Tj
+(Computer\040Science\040Dept\054\040MIT\054\040MA\04002139) Tj
 T*
 ET
 BT
@@ -2088,7 +2088,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 207.3018 Tm
-(\050617\051 555\0555678) Tj
+(\050617\051\040555\0555678) Tj
 T*
 ET
 BT
@@ -2186,7 +2186,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 261.203 87.30283 Tm
-(Applied for H1\055B visa through employer Google Inc\056) Tj
+(Applied\040for\040H1\055B\040visa\040through\040employer\040Google\040Inc\056) Tj
 T*
 ET
 BT
@@ -2196,7 +2196,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 75.30083 Tm
-(Application submitted on March 15\054 2024) Tj
+(Application\040submitted\040on\040March\04015\054\0402024) Tj
 T*
 ET
 BT
@@ -2206,7 +2206,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 63.30183 Tm
-(Currently awaiting USCIS processing) Tj
+(Currently\040awaiting\040USCIS\040processing) Tj
 T*
 ET
 Q
@@ -2251,7 +2251,7 @@ endobj
 /Descent -214
 /Flags 32
 /FontBBox [ -166 -214 1076 952 ]
-/FontFamily (HelveticaNeueLT Std)
+/FontFamily (HelveticaNeueLT\040Std)
 /FontFile3 10 0 R
 /FontName /MJULNU+HelveticaNeueLTStd-Roman
 /FontStretch /Normal
@@ -2301,7 +2301,7 @@ endobj
 /Descent -230
 /Flags 32
 /FontBBox [ -165 -230 1099 972 ]
-/FontFamily (HelveticaNeueLT Std Blk Cn)
+/FontFamily (HelveticaNeueLT\040Std\040Blk\040Cn)
 /FontFile3 13 0 R
 /FontName /PVHIDO+HelveticaNeueLTStd-BlkCn
 /FontStretch /Condensed
@@ -2346,7 +2346,7 @@ endobj
 /Descent -250
 /Flags 32
 /FontBBox [ -199 -250 1014 934 ]
-/FontFamily (ITC Franklin Gothic Std Book)
+/FontFamily (ITC\040Franklin\040Gothic\040Std\040Book)
 /FontFile3 16 0 R
 /FontName /JKETXA+ITCFranklinGothicStd-Demi
 /FontStretch /Normal
@@ -2404,7 +2404,7 @@ endobj
 /Descent -218
 /Flags 32
 /FontBBox [ -166 -218 1078 975 ]
-/FontFamily (HelveticaNeueLT Std)
+/FontFamily (HelveticaNeueLT\040Std)
 /FontFile3 19 0 R
 /FontName /ZSKQNU+HelveticaNeueLTStd-Bd
 /FontStretch /Normal
@@ -2459,7 +2459,7 @@ endobj
 /Descent -218
 /Flags 96
 /FontBBox [ -166 -218 1129 975 ]
-/FontFamily (HelveticaNeueLT Std)
+/FontFamily (HelveticaNeueLT\040Std)
 /FontFile3 22 0 R
 /FontName /HJLMVE+HelveticaNeueLTStd-BdIt
 /FontStretch /Normal
@@ -2505,7 +2505,7 @@ endobj
 /Descent -270
 /Flags 32
 /FontBBox [ -149 -270 1353 992 ]
-/FontFamily (HelveticaNeueLT Std Bold Outln)
+/FontFamily (HelveticaNeueLT\040Std\040Bold\040Outln)
 /FontFile3 25 0 R
 /FontName /KLUELY+HelveticaNeueLTStd-BdOu
 /FontStretch /Normal
@@ -2550,7 +2550,7 @@ endobj
 /Descent -232
 /Flags 32
 /FontBBox [ -165 -232 1101 953 ]
-/FontFamily (HelveticaNeueLT Std Blk)
+/FontFamily (HelveticaNeueLT\040Std\040Blk)
 /FontFile3 28 0 R
 /FontName /NSIWBS+HelveticaNeueLTStd-Blk
 /FontStretch /Normal
@@ -2595,7 +2595,7 @@ endobj
 /Descent -228
 /Flags 32
 /FontBBox [ -170 -228 1003 962 ]
-/FontFamily (Helvetica LT Std)
+/FontFamily (Helvetica\040LT\040Std)
 /FontFile3 31 0 R
 /FontName /UFZMVE+HelveticaLTStd-Bold
 /FontStretch /Normal
@@ -2638,7 +2638,7 @@ endobj
 /Descent -214
 /Flags 96
 /FontBBox [ -166 -214 1106 957 ]
-/FontFamily (HelveticaNeueLT Std)
+/FontFamily (HelveticaNeueLT\040Std)
 /FontFile3 34 0 R
 /FontName /WYUYXA+HelveticaNeueLTStd-It
 /FontStretch /Normal
@@ -2683,12 +2683,12 @@ endobj
 /Rotate 0
 /Tabs /S
 /Type /Page
-/Parent 2 0 R
+/Parent 1 0 R
 >>
 endobj
 36 0 obj
 <<
-/Length 11065
+/Length 11212
 >>
 stream
 q
@@ -3458,7 +3458,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 122.4 711.3018 Tm
-(US Open Tennis Championship 2024\054 Aug 26\055Sep 8) Tj
+(US\040Open\040Tennis\040Championship\0402024\054\040Aug\04026\055Sep\0408) Tj
 T*
 ET
 BT
@@ -3468,7 +3468,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 699.3028 Tm
-(Miami Open 2024\054 March 17\05531) Tj
+(Miami\040Open\0402024\054\040March\04017\05531) Tj
 T*
 ET
 BT
@@ -3478,7 +3478,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 687.3008 Tm
-(Indian Wells Tennis Tournament 2024\054 March 3\05517) Tj
+(Indian\040Wells\040Tennis\040Tournament\0402024\054\040March\0403\05517) Tj
 T*
 ET
 BT
@@ -3488,7 +3488,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 100.8 663.3028 Tm
-(USTA Foundation\054 EIN\072 13\0553782331) Tj
+(USTA\040Foundation\054\040EIN\072\04013\0553782331) Tj
 T*
 ET
 BT
@@ -3498,7 +3498,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 651.3008 Tm
-(Miami Youth Tennis\054 EIN\072 65\0551234567) Tj
+(Miami\040Youth\040Tennis\054\040EIN\072\04065\0551234567) Tj
 T*
 ET
 BT
@@ -3508,7 +3508,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 639.3018 Tm
-(Tennis for America\054 EIN\072 84\0557654321) Tj
+(Tennis\040for\040America\054\040EIN\072\04084\0557654321) Tj
 T*
 ET
 BT
@@ -3518,7 +3518,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 133.92 567.3018 Tm
-(Severe ankle injury sustained during tennis match) Tj
+(Severe\040ankle\040injury\040sustained\040during\040tennis\040match) Tj
 T*
 ET
 BT
@@ -3528,7 +3528,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 555.3028 Tm
-(Required immediate surgery and physical therapy) Tj
+(Required\040immediate\040surgery\040and\040physical\040therapy) Tj
 T*
 ET
 BT
@@ -3538,7 +3538,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 543.3008 Tm
-(Doctor recommended no travel for 3 months) Tj
+(Doctor\040recommended\040no\040travel\040for\0403\040months) Tj
 T*
 ET
 BT
@@ -3548,7 +3548,7 @@ ET
 0 0 0.502 rg
 BT
 1 0 0 1 64.8 531.3018 Tm
-(Full recovery achieved after rehabilitation) Tj
+(Full\040recovery\040achieved\040after\040rehabilitation) Tj
 T*
 ET
 BT
@@ -3628,7 +3628,7 @@ endobj
 /Rotate 0
 /Tabs /S
 /Type /Page
-/Parent 2 0 R
+/Parent 1 0 R
 >>
 endobj
 39 0 obj
@@ -3668,7 +3668,7 @@ endobj
 /Rotate 0
 /Tabs /S
 /Type /Page
-/Parent 2 0 R
+/Parent 1 0 R
 >>
 endobj
 41 0 obj
@@ -3693,52 +3693,52 @@ xref
 0 42
 0000000000 65535 f 
 0000000015 00000 n 
-0000000054 00000 n 
+0000000095 00000 n 
 0000000134 00000 n 
 0000000183 00000 n 
 0000000565 00000 n 
-0000026201 00000 n 
-0000026308 00000 n 
-0000026391 00000 n 
-0000027600 00000 n 
-0000028414 00000 n 
-0000033026 00000 n 
-0000034236 00000 n 
-0000034583 00000 n 
-0000035441 00000 n 
-0000036652 00000 n 
-0000037127 00000 n 
-0000039545 00000 n 
-0000040754 00000 n 
-0000041408 00000 n 
-0000045239 00000 n 
-0000046448 00000 n 
-0000046850 00000 n 
-0000048427 00000 n 
-0000049637 00000 n 
-0000049972 00000 n 
-0000050825 00000 n 
-0000052039 00000 n 
-0000052367 00000 n 
-0000053020 00000 n 
-0000054227 00000 n 
-0000054535 00000 n 
-0000055206 00000 n 
-0000056413 00000 n 
-0000056856 00000 n 
-0000058877 00000 n 
-0000059161 00000 n 
-0000070280 00000 n 
-0000070388 00000 n 
-0000070638 00000 n 
-0000074683 00000 n 
-0000074920 00000 n 
+0000026414 00000 n 
+0000026521 00000 n 
+0000026604 00000 n 
+0000027813 00000 n 
+0000028630 00000 n 
+0000033242 00000 n 
+0000034452 00000 n 
+0000034808 00000 n 
+0000035666 00000 n 
+0000036877 00000 n 
+0000037364 00000 n 
+0000039782 00000 n 
+0000040991 00000 n 
+0000041648 00000 n 
+0000045479 00000 n 
+0000046688 00000 n 
+0000047093 00000 n 
+0000048670 00000 n 
+0000049880 00000 n 
+0000050224 00000 n 
+0000051077 00000 n 
+0000052291 00000 n 
+0000052625 00000 n 
+0000053278 00000 n 
+0000054485 00000 n 
+0000054799 00000 n 
+0000055470 00000 n 
+0000056677 00000 n 
+0000057123 00000 n 
+0000059144 00000 n 
+0000059428 00000 n 
+0000070694 00000 n 
+0000070802 00000 n 
+0000071052 00000 n 
+0000075097 00000 n 
+0000075334 00000 n 
 trailer
 <<
 /Size 42
 /Root 3 0 R
-/Info 1 0 R
+/Info 2 0 R
 >>
 startxref
-77471
+77885
 %%EOF

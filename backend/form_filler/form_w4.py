@@ -7,6 +7,12 @@ def fill_w4_form(
     address: str,                   # f1_03[0] - Address
     city_state_zip: str,            # f1_04[0] - City/town, state, zip code
     ssn: str,                       # f1_05[0] - Social Security Number
+
+    # Checkboxes
+    single_or_married_filing_separately: bool = False,  # c1_1[0] - Single or married filing separately
+    married_filing_jointly: bool = False,               # c1_1[1] - Married filing jointly
+    head_of_household: bool = False,                     # c1_1[2] - Head of household
+    two_jobs_only: bool = False,               # c1_2[0] - If there are only two jobs total, you may check this box. Do the same on Form W-4 for the other job. This option is generally more accurate than (b) if pay at the lower paying job is more than half of the pay at the higher paying job. Otherwise, (b) is more accurate 
     
     # Tax Credits
     child_tax_credits: float = 0,   # f1_06[0] - Total child tax credits ($2000 per child under 17)
@@ -43,10 +49,10 @@ def fill_w4_form(
     """
     # Initialize form data with default values
     form_data = {
-        'c1_1[0]': True,
-        'c1_1[1]': True,
-        'c1_1[2]': True,
-        'c1_2[0]': True,
+        'c1_1[0]': single_or_married_filing_separately,
+        'c1_1[1]': married_filing_jointly,
+        'c1_1[2]': head_of_household,
+        'c1_2[0]': two_jobs_only,
         'f1_01[0]': first_middle_name,
         'f1_02[0]': last_name,
         'f1_03[0]': address,
@@ -75,24 +81,25 @@ def fill_w4_form(
     }
 
     # Fill and save the form
-    filled_form = PdfWrapper("w4.pdf").fill(form_data)
-    with open("filled_w4.pdf", "wb+") as output:
+    filled_form = PdfWrapper("/Users/priyadarshannarayanasamy/Desktop/hacklytics/taxerino/backend/form_filler/templates/w4.pdf").fill(form_data)
+    with open("filled/filled_w4.pdf", "wb+") as output:
         output.write(filled_form.read())
 
 # Example usage
-fill_w4_form(
-    first_middle_name="John A",
-    last_name="Doe",
-    address="123 Main St",
-    city_state_zip="San Francisco, CA 94105",
-    ssn="123-45-6789",
-    child_tax_credits=4000,  # 2 children under 17
-    dependent_credits=500,   # 1 other dependent
-    total_credits=4500,
-    employer_info="ACME Corp\n123 Business Ave\nSan Francisco, CA 94105",
-    employment_date="2025-01-15",
-    employer_ein="12-3456789",
-    pay_periods=26,         # Biweekly pay
-    itemized_deductions=28000,
-    standard_deduction=30000  # Married filing jointly
-)
+if __name__ == "__main__":
+    fill_w4_form(
+        first_middle_name="John A",
+        last_name="Doe",
+        address="123 Main St",
+        city_state_zip="San Francisco, CA 94105",
+        ssn="123-45-6789",
+        child_tax_credits=4000,  # 2 children under 17
+        dependent_credits=500,   # 1 other dependent
+        total_credits=4500,
+        employer_info="ACME Corp\n123 Business Ave\nSan Francisco, CA 94105",
+        employment_date="2025-01-15",
+        employer_ein="12-3456789",
+        pay_periods=26,         # Biweekly pay
+        itemized_deductions=28000,
+        standard_deduction=30000  # Married filing jointly
+    )
