@@ -116,7 +116,7 @@ def update_tax_data(data, filename):
 
 def remove_file_data(filename):
     """
-    Remove data associated with a specific file from MongoDB.
+    Remove data associated with a specific file from MongoDB and clear cache files.
     """
     try:
         # Remove the file mapping
@@ -127,9 +127,25 @@ def remove_file_data(filename):
         if remaining_files == 0:
             # If no files left, delete all tax data
             tax_data_collection.delete_many({})
-            # Clear the summary cache
-            clear_summary_cache()
-            print(f"No files remaining, cleared all tax data and cache")
+            
+            # Clear all cache files
+            cache_files = [
+                'tax_summary.json',
+                'tax_plots.json',
+                'benford.json',
+                'anomalies.json'
+            ]
+            
+            for cache_file in cache_files:
+                cache_path = os.path.join(CACHE_FOLDER, cache_file)
+                if os.path.exists(cache_path):
+                    try:
+                        os.remove(cache_path)
+                        print(f"Deleted cache file: {cache_file}")
+                    except Exception as e:
+                        print(f"Error deleting cache file {cache_file}: {str(e)}")
+            
+            print(f"No files remaining, cleared all tax data and cache files")
         
         print(f"Successfully removed data for file: {filename}")
         update_info_json()
@@ -147,6 +163,8 @@ def get_current_tax_data():
         if data:
             # Remove MongoDB's _id field
             data.pop('_id', None)
+            # Remove last_updated field
+            data.pop('last_updated', None)
             
             # Convert any remaining datetime objects to ISO format strings
             for key, value in dict(data).items():
@@ -205,8 +223,7 @@ def extract_text_from_pdf(pdf_path):
                                 "text": """You are a tax expert. You will be provided with a document image, and your task is to extract all the text from it. 
                                 Please don't add any additional information. Also only extract information from documents which are in the form of tax documents/bank statements etc instead of just plain text.
                                 Also I want you to process the output in the form of a json schema with as many fields as possible with values. 
-                                There is no defined schema you need to extract as much info as you can in a json schema. Only return the information
-                                that exists as a NUMERICAL VALUE. If the value is not a number, then don't include it.
+                                There is no defined schema you need to extract as much info as you can in a json schema.
                                 BE AS PRECISE AS POSSIBLE.
                                 Take your time, the decision is yours, extract all the info CORRECTLY from this and give me back a json and not a string"""
                             },
@@ -249,6 +266,45 @@ def handle_document(filename):
     # Then handle the file deletion
     return document_handler.handle_document(filename)
 
+def save_json_data(data, filename):
+    """Save data to a JSON file in the cache folder"""
+    try:
+        filepath = os.path.join(CACHE_FOLDER, filename)
+        with open(filepath, 'w') as f:
+            json.dump(data, f)
+    except Exception as e:
+        print(f"Error saving {filename}: {str(e)}")
+
+def process_uploaded_documents():
+    """Process all documents and generate analysis files"""
+    try:
+        # Get current tax data
+        tax_data = get_current_tax_data()
+        if not tax_data:
+            print("No tax data available for processing")
+            return False
+
+        # Generate tax summary
+        tax_summary = generate_tax_summary(tax_data)
+        save_json_data(tax_summary, 'tax_summary.json')
+        
+        # Generate plot data
+        plot_data = generate_plot_values_from_provided_data(tax_data)
+        save_json_data(plot_data, 'tax_plots.json')
+        
+        # Generate Benford's analysis
+        benford_data = analyze_benfords_law(tax_data)
+        save_json_data(benford_data, 'benford.json')
+        
+        # Generate anomalies
+        anomalies_data = anomaly_detection(tax_data)
+        save_json_data(anomalies_data, 'anomalies.json')
+        
+        return True
+    except Exception as e:
+        print(f"Error processing documents: {str(e)}")
+        return False
+
 # Handle POST requests for uploading files
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
@@ -261,18 +317,36 @@ def upload_file():
             filename = response_data.get('filename')
             
             if filename:
+                # First process the file and update MongoDB
                 pdf_path = os.path.join(UPLOAD_FOLDER, filename)
                 extracted_text = extract_text_from_pdf(pdf_path)
                 data = json.loads(extracted_text)
                 
                 # Update MongoDB with the new data and track the file
                 update_tax_data(data, filename)
-                # Clear the summary cache since we have new data
+                update_info_json()
+                
+                # Clear the cache before generating new analysis
                 clear_summary_cache()
-            update_info_json()
+                
+                # Now process analysis in background
+                def process_analysis():
+                    try:
+                        # Process documents and generate analysis files
+                        process_uploaded_documents()
+                    except Exception as e:
+                        print(f"Error in background analysis: {str(e)}")
+
+                from threading import Thread
+                analysis_thread = Thread(target=process_analysis)
+                analysis_thread.start()
+                
+            # Return success after MongoDB update but before analysis
+            return result
             
         except Exception as e:
-            print(f"Error processing uploaded file: {str(e)}")
+            print(f"Error processing upload: {str(e)}")
+            return result
     
     return result
 
@@ -469,14 +543,14 @@ def get_anomalies():
     try:
         # Update info.json with current data
         print("Starting anomaly detection...")
-        update_info_json()
+
         
         # Check if info.json exists and read its contents
         if not os.path.exists("info.json"):
             print("info.json does not exist")
             return jsonify({
-                "status": "empty",
-                "message": "No tax data available for analysis"
+                "status": "success",
+                "anomalies": []
             })
         
         # Load tax data
@@ -495,43 +569,29 @@ def get_anomalies():
         if not tax_data:
             print("Tax data is empty")
             return jsonify({
-                "status": "empty",
-                "message": "No tax data available for analysis"
+                "status": "success",
+                "anomalies": []
             })
 
         # Get anomalies
         try:
-            anomalies = anomaly_detection(tax_data)
-            print("Generated anomalies:", json.dumps(anomalies, indent=2))
+            result = anomaly_detection(tax_data)
+            print("Generated anomalies:", json.dumps(result, indent=2))
             
-            if not isinstance(anomalies, dict):
-                print("Invalid anomalies format: not a dictionary")
+            # Check if result has anomalies key
+            if not isinstance(result, dict) or 'anomalies' not in result:
+                print("Invalid anomalies format: missing anomalies key")
                 return jsonify({
                     "status": "error",
                     "error": "Invalid anomalies format returned from analysis"
                 })
 
-            if not anomalies:  # Check if anomalies is empty
-                print("No anomalies detected")
-                return jsonify({
-                    "status": "success",
-                    "data": {}
-                })
-
-            # Validate anomalies structure
-            for field, data in anomalies.items():
-                if not isinstance(data, dict) or 'source_details' not in data or 'anomaly_details' not in data:
-                    print(f"Invalid anomaly structure for field {field}")
-                    return jsonify({
-                        "status": "error",
-                        "error": f"Invalid anomaly structure for field {field}"
-                    })
-
-            # Return the response
+            # Return the response with the anomalies array
             return jsonify({
                 "status": "success",
-                "data": anomalies
+                "anomalies": result['anomalies']
             })
+            
         except Exception as e:
             print(f"Error in anomaly detection: {str(e)}")
             return jsonify({
@@ -546,6 +606,21 @@ def get_anomalies():
             "error": str(e)
         })
     
+# Serve cached JSON files
+@app.route('/api/cache/<filename>', methods=['GET'])
+def serve_cache_file(filename):
+    try:
+        filepath = os.path.join(CACHE_FOLDER, filename)
+        if not os.path.exists(filepath):
+            return jsonify({'error': 'File not found'}), 404
+            
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        return jsonify(data)
+    except Exception as e:
+        print(f"Error serving cache file {filename}: {str(e)}")
+        return jsonify({'error': 'Failed to read cache file'}), 500
+
 if __name__ == '__main__':
     print("Server starting... Upload folder:", os.path.abspath(UPLOAD_FOLDER))
     app.run(debug=True, port=5000)

@@ -24,34 +24,34 @@ def generate_tax_summary(tax_data):
         {{
             "summary": {{
                 "overview": {{
-                    "total_income": "Your total income for the tax year is £X. This includes £Y from salary and £Z from other sources.",
+                    "total_income": "Your total income for the tax year is $X. This includes $Y from salary and $Z from other sources.",
                     "filing_status": "Based on your circumstances, you should file as X. This is optimal because Y.",
-                    "tax_bracket": "You fall in the X% tax bracket for income between £Y and £Z."
+                    "tax_bracket": "You fall in the X% tax bracket for income between $Y and $Z."
                 }},
                 "implications": {{
-                    "tax_liability": "Your estimated tax liability is £X, calculated as follows: Y",
-                    "marginal_rate": "Your marginal tax rate is X%. This means each additional pound earned is taxed at Y%",
+                    "tax_liability": "Your estimated tax liability is $X, calculated as follows: Y",
+                    "marginal_rate": "Your marginal tax rate is X%. This means each additional dollar earned is taxed at Y%",
                     "state_tax_impact": "Your state tax obligation is X% based on Y"
                 }},
                 "deductions": {{
-                    "standard_vs_itemized": "You should take the X deduction because Y. This will save you £Z.",
+                    "standard_vs_itemized": "You should take the X deduction because Y. This will save you $Z.",
                     "available_deductions": "You qualify for the following deductions: X, Y, Z",
-                    "estimated_savings": "These deductions will save you approximately £X"
+                    "estimated_savings": "These deductions will save you approximately $X"
                 }},
                 "credits": {{
                     "eligible_credits": "You qualify for X, Y, and Z credits",
                     "requirements": "To claim these credits, you need X, Y, Z",
-                    "estimated_benefit": "These credits will reduce your tax by £X"
+                    "estimated_benefit": "These credits will reduce your tax by $X"
                 }},
                 "deadlines": {{
                     "filing_deadline": "Your next important deadline is DATE for REASON. You must complete X by this date.",
-                    "estimated_tax": "Your next estimated tax payment of £X is due on Y",
+                    "estimated_tax": "Your next estimated tax payment of $X is due on Y",
                     "extension_options": "You can extend until X by doing Y"
                 }},
                 "recommendations": {{
                     "immediate_actions": "Your most important next step is: X. This will help you Y.",
                     "tax_planning": "Implement these strategies: X, Y, Z",
-                    "savings_opportunities": "You can save £X by doing Y"
+                    "savings_opportunities": "You can save $X by doing Y"
                 }},
                 "concerns": {{
                     "risk_areas": "These items need attention: X, Y, Z",
@@ -59,13 +59,13 @@ def generate_tax_summary(tax_data):
                     "compliance_issues": "Address these compliance requirements: X, Y, Z"
                 }},
                 "retirement_planning": {{
-                    "contribution_limits": "You can contribute up to £X to your retirement accounts",
-                    "tax_advantages": "This will save you £X in taxes this year",
+                    "contribution_limits": "You can contribute up to $X to your retirement accounts",
+                    "tax_advantages": "This will save you $X in taxes this year",
                     "recommendations": "Maximize your contributions by doing X, Y, Z"
                 }},
                 "investment_tax": {{
-                    "capital_gains": "Your capital gains tax rate is X%. This applies to £Y in gains",
-                    "loss_harvesting": "You can offset £X in gains by harvesting losses",
+                    "capital_gains": "Your capital gains tax rate is X%. This applies to $Y in gains",
+                    "loss_harvesting": "You can offset $X in gains by harvesting losses",
                     "investment_strategies": "Implement these tax-efficient strategies: X, Y, Z"
                 }}
             }},
@@ -81,8 +81,8 @@ def generate_tax_summary(tax_data):
         }}
 
         Important Guidelines:
-        - Always include exact monetary values with pound signs (£)
-        - Format all monetary values with proper commas and decimals (e.g., £1,234.56)
+        - Always include exact monetary values with dollar signs ($)
+        - Format all monetary values with proper commas and decimals (e.g., $1,234.56)
         - For the overview section, ensure total_income, filing_status, and tax_bracket are always present
         - For deadlines, always specify exact dates in DD/MM/YYYY format
         - For immediate_actions, provide one clear, specific action

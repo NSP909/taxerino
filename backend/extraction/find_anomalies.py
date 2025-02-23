@@ -1,70 +1,52 @@
 import os
 import json
-from openai import OpenAI
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+from anthropic import Anthropic
 
 def anomaly_detection(json_data):
     '''
     Function to detect anomalies in the data
 
-    checks for common fields in the data provided upon inserting forms on webiste and tallies them to check whether the numbers match
-    uses gpt wrapper prevent having to check manually each field
+    checks for common fields in the data provided upon inserting forms on website and tallies them to check whether the numbers match
+    uses Claude wrapper to prevent having to check manually each field
     takes in json data and returns a json object with the anomalies detected
     '''
 
     try:
-        completion = client.chat.completions.create(
-            model="gpt-4",  # Changed from gpt-4o to gpt-4
-            messages=[
-                {
-                    "role": "system", 
-                    "content": """You are an expert financial data analyst with exceptional attention to detail. Your task is to analyze financial JSON data files and identify discrepancies or anomalies between related fields across documents. 
+        # Initialize Anthropic client
+        client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-Key Requirements:
-1. Compare matching fields across all provided documents and identify any inconsistencies
-2. Generate a detailed anomaly report in JSON format
-3. Only include fields with detected anomalies in the output
-4. For numerical values, calculate and show the differences
-5. For non-numerical identifiers (like EIN, account numbers), simply indicate "mismatch detected"
-6. For scenarios where like net pay, calculate the total tax and then subtract. Do some mathematical operations yourself, be flexible like a human
-
-Output Format:
-{
-    "field_with_anomaly": {
-        "source_details": {
-            "document_1": {
-                "value": "<value>",
-                "metadata": "<relevant context>"
-            },
-            "document_2": {
-                "value": "<value>",
-                "metadata": "<relevant context>"
-            }
+        # System prompt as a separate parameter
+        system_prompt = """
+You are a tax data anomaly detection tool, the best in the world. You are trained on data from the IRS and other tax authorities. 
+You are given a JSON object containing tax data. Your task is to analyze this data for anomalies and return ONLY a JSON response. 
+Do NOT hallucinate. Follow the following format:
+    {
+    "anomalies": [
+        {
+            "field": "field_name",
+            "anomaly_type": "anomaly_type",
+            "description": "description of the anomaly"
         },
-        "anomaly_details": {
-            "type": "numerical_difference",
-            "difference": "<calculated difference for numerical values>",
-            "description": "<clear explanation of the anomaly>"
-        }
-    }
+        ...
+    ]
 }
+"""
 
-IMPORTANT: 
-1. Return ONLY valid JSON data
-2. Do not include any markdown formatting or additional text
-3. Ensure all values are properly quoted in the JSON
-4. Make sure the response is a complete, valid JSON object"""
-                },
+        # Create the completion using Claude
+        message = client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=1000,
+            system=system_prompt,  # System prompt as a separate parameter
+            messages=[
                 {
                     "role": "user",
                     "content": f"Analyze this tax data for anomalies and return ONLY a JSON response: {json.dumps(json_data)}"
                 }
             ],
-            temperature=0.2  # Lower temperature for more consistent output
+            temperature=0.3
         )
         
-        output = completion.choices[0].message.content.strip()
+        output = message.content[0].text.strip()
         
         # Remove any potential markdown formatting
         if "```json" in output:

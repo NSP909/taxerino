@@ -1,22 +1,50 @@
 {
-    "allocated_tips": 50,
-    "control_number": 126640,
-    "employee_ssn": 123447858,
-    "employer_id": 52600203,
-    "federal_tax_withheld": 28.89,
-    "last_updated": "2025-02-23T07:45:52.373000",
-    "local_income_tax": 47.88,
-    "local_wages": 1200,
-    "medicare_tax_withheld": 100,
-    "medicare_wages": 1500,
-    "social_security_tax_withheld": 100,
-    "social_security_tips": 70,
-    "social_security_wages": 2000,
-    "state_income_tax": 275.94,
-    "state_wages": 6232.85,
-    "tax_year": 2024,
-    "wages_compensation": 6232.85,
-    "zip_code": 20742,
+    "document_status": "system generated payslip",
+    "document_type": "Payslip",
+    "employee": {
+        "ssn": "123-44-8758",
+        "name": "Aditya Singh",
+        "address": {
+            "street": "3854 Stadium Drive",
+            "city": "COLLEGE PARK",
+            "state": "MD",
+            "zip": "20742"
+        }
+    },
+    "employer": {
+        "name": "STATE OF MARYLAND",
+        "department": "CENTRAL PAYROLL BUREAU",
+        "address": {
+            "po_box": "2396",
+            "city": "ANNAPOLIS",
+            "state": "MD",
+            "zip": "21404-2396"
+        },
+        "ein": "52-6002033",
+        "control_number": "MD126640",
+        "state_id": "69-0520001L"
+    },
+    "tax_year": "2024",
+    "wages_and_tax": {
+        "wages_tips_compensation": 6232.85,
+        "federal_income_tax_withheld": 28.89,
+        "social_security_wages": {
+            "amount": 1500,
+            "tax_withheld": 100
+        },
+        "medicare_wages": {
+            "amount": 2000,
+            "tax_withheld": 150
+        },
+        "social_security_tips": {
+            "amount": 70,
+            "allocated_tips": 50
+        },
+        "state_wages": 6232.85,
+        "state_income_tax": 275.94,
+        "local_wages": 1200,
+        "local_income_tax": 47.88
+    },
     "deductions": {
         "tax": 800,
         "total_deductions": 800
@@ -27,7 +55,15 @@
         "overtime": 300,
         "total_earnings": 8800
     },
-    "employee_id": 7,
-    "net_pay": 8000,
-    "working_days": 26
+    "employee_details": {
+        "name": "Aditya Singh",
+        "employee_id": "007"
+    },
+    "payment_details": {
+        "pay_date": "2025/02/22",
+        "working_days": 26
+    },
+    "summary": {
+        "net_pay": 8000
+    }
 }
