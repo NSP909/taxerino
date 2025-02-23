@@ -1,0 +1,267 @@
+{plot data: {
+    "Account Balance Overview": {
+      "Account_Balance_Overview": {
+        "type": "line chart",
+        "description": "This visualization shows the client's account balance over the statement period from 1 February to 1 March, 2019, indicating how the account balance fluctuated with deposits and withdrawals.",
+        "parameters": {
+          "x axis": [
+            "1 February",
+            "1 February",
+            "3 February",
+            "4 February",
+            "11 February",
+            "16 February",
+            "17 February",
+            "17 February",
+            "18 February",
+            "18 February",
+            "24 February",
+            "24 February",
+            "28 February"
+          ],
+          "y axis": [
+            39975.5,
+            39955.5,
+            39925.5,
+            42500.5,
+            42800.5,
+            42750.5,
+            42710.5,
+            42632.16,
+            45207.16,
+            45195.16,
+            45042.16,
+            45067.16,
+            44079.83
+          ],
+          "names": "Account Balance Over Time",
+          "title": "Account Balance Overview for Mr John Smith",
+          "labels": {
+            "x": "Date",
+            "y": "Balance (\u00a3)"
+          },
+          "colors": "blue",
+          "legend": "Account Balance"
+        }
+      }
+    },
+    "Transaction Summary": {
+      "Transaction Summary": {
+        "type": "Bar Chart",
+        "description": "This bar chart visualizes the 'money in' and 'money out' transactions over the statement period to show spending and income trends. The chart helps in understanding which days had higher expenses and income, offering insights into cash flow management.",
+        "parameters": {
+          "x axis": [
+            "1 February",
+            "1 February",
+            "3 February",
+            "4 February",
+            "11 February",
+            "16 February",
+            "17 February",
+            "17 February",
+            "18 February",
+            "18 February",
+            "24 February",
+            "24 February",
+            "28 February"
+          ],
+          "height": [
+            -24.5,
+            -20.0,
+            -30.0,
+            2575.0,
+            300.0,
+            -50.0,
+            -40.0,
+            -78.34,
+            2575.0,
+            -15.0,
+            -150.0,
+            25.0,
+            -987.33
+          ],
+          "title": "Transaction Summary",
+          "labels": [
+            "Money Out",
+            "Money Out",
+            "Money Out",
+            "Money In",
+            "Money In",
+            "Money Out",
+            "Money Out",
+            "Money Out",
+            "Money In",
+            "Money Out",
+            "Money Out",
+            "Money In",
+            "Money Out"
+          ],
+          "colors": [
+            "red",
+            "red",
+            "red",
+            "green",
+            "green",
+            "red",
+            "red",
+            "red",
+            "green",
+            "red",
+            "red",
+            "green",
+            "red"
+          ],
+          "legend": [
+            "Money In",
+            "Money Out"
+          ],
+          "width": 0.8,
+          "axis": "vertical"
+        }
+      }
+    },
+    "Income Over Time": {
+      "Income Over Time": {
+        "type": "Line Chart",
+        "description": "This line chart visualizes the changes in balance over time, highlighting periods of income and expenses.",
+        "parameters": {
+          "x axis": [
+            "1 February",
+            "1 February",
+            "3 February",
+            "4 February",
+            "11 February",
+            "16 February",
+            "17 February",
+            "17 February",
+            "18 February",
+            "18 February",
+            "24 February",
+            "24 February",
+            "28 February"
+          ],
+          "y axis": [
+            39975.5,
+            39955.5,
+            39925.5,
+            42500.5,
+            42800.5,
+            42750.5,
+            42710.5,
+            42632.16,
+            45207.16,
+            45195.16,
+            45042.16,
+            45067.16,
+            44079.83
+          ],
+          "names": "Balance Over Time",
+          "title": "Income Over Time",
+          "labels": {
+            "x": "Date",
+            "y": "Balance (\u00a3)"
+          },
+          "colors": "blue",
+          "legend": "Balance Trend"
+        }
+      }
+    },
+    "Expenditures Trend": {
+      "Expenditures Trend": {
+        "type": "Line Chart",
+        "description": "This visualization shows the trend of expenditures over the statement period from 1 February to 28 February 2019. It helps to identify the pattern and frequency of spending, which supports budgeting discussions and financial planning.",
+        "parameters": {
+          "x axis": [
+            "1 February",
+            "1 February",
+            "3 February",
+            "16 February",
+            "17 February",
+            "17 February",
+            "18 February",
+            "24 February",
+            "28 February"
+          ],
+          "y axis": [
+            24.5,
+            20.0,
+            30.0,
+            50.0,
+            40.0,
+            78.34,
+            15.0,
+            150.0,
+            987.33
+          ],
+          "names": "Expenditures",
+          "title": "Expenditures Trend from 1 February to 28 February 2019",
+          "labels": {
+            "x": "Date",
+            "y": "Amount (\u00a3)"
+          },
+          "colors": "blue",
+          "legend": "Amount Spent"
+        }
+      }
+    },
+    "Monthly Expenditures Heatmap": {
+      "Monthly Expenditures Heatmap": {
+        "type": "Heatmap",
+        "description": "This heatmap visualizes the daily expenditures of Mr John Smith for the period of 1 February to 1 March, 2019. It provides a color-coded overview of how expenses were distributed across different days of the month, allowing for easy identification of high spending days and helping to spot spending patterns.",
+        "parameters": {
+          "data": [
+            [
+              "1 February",
+              24.5
+            ],
+            [
+              "1 February",
+              20.0
+            ],
+            [
+              "3 February",
+              30.0
+            ],
+            [
+              "16 February",
+              50.0
+            ],
+            [
+              "17 February",
+              40.0
+            ],
+            [
+              "17 February",
+              78.34
+            ],
+            [
+              "18 February",
+              15.0
+            ],
+            [
+              "24 February",
+              150.0
+            ],
+            [
+              "28 February",
+              987.33
+            ]
+          ],
+          "vmin": "0",
+          "vmax": "1000",
+          "names": [
+            "Date",
+            "Money Out"
+          ],
+          "title": "Monthly Expenditures (1 February - 1 March 2019)",
+          "labels": {
+            "x": "Date",
+            "y": "Expenses (\u00a3)"
+          },
+          "colors": "Blues",
+          "legend": "Expense Intensity"
+        }
+      }
+    }
+  }
+}

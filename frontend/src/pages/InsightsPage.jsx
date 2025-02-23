@@ -1,14 +1,26 @@
 import { useState } from "react";
 import { useTaxSummary } from "../hooks/useTaxSummary";
+import { useTaxPlots } from "../hooks/useTaxPlots";
 import {
   ChartBarIcon,
   ArrowPathIcon,
   ExclamationCircleIcon,
-  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
+import FinancialCharts from "../components/Insights/FinancialCharts";
 
 export default function InsightsPage() {
-  const { documentsData, taxSummary, isLoading, refreshData } = useTaxSummary();
+  const {
+    documentsData,
+    taxSummary,
+    isLoading: summaryLoading,
+    refreshData,
+  } = useTaxSummary();
+  const {
+    plotData,
+    isLoading: plotsLoading,
+    error: plotError,
+    refreshPlotData,
+  } = useTaxPlots();
   const [selectedSection, setSelectedSection] = useState("overview");
 
   const getInsightData = (summary) => {
@@ -58,7 +70,25 @@ export default function InsightsPage() {
       name: "Investment Analysis",
       description: "Investment tax implications",
     },
+    {
+      id: "visualizations",
+      name: "Visualizations",
+      description: "Tax data visualizations",
+    },
   ];
+
+  const handleRefresh = async () => {
+    try {
+      // First refresh the tax summary data
+      await refreshData(true);
+      // Then fetch fresh plot data
+      await refreshPlotData(true);
+    } catch (error) {
+      console.error("Error refreshing data:", error);
+    }
+  };
+
+  const isLoading = summaryLoading || plotsLoading;
 
   return (
     <div className="h-full p-6">
@@ -70,7 +100,7 @@ export default function InsightsPage() {
           </p>
         </div>
         <button
-          onClick={() => refreshData(true)}
+          onClick={handleRefresh}
           disabled={isLoading}
           className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors
             ${
@@ -128,6 +158,34 @@ export default function InsightsPage() {
                   <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
                   <div className="h-2 w-2 bg-emerald-400 rounded-full"></div>
                 </div>
+              </div>
+            ) : selectedSection === "visualizations" ? (
+              <div>
+                <h2 className="text-lg font-semibold text-emerald-900 mb-4">
+                  Tax Data Visualizations
+                </h2>
+                {plotError ? (
+                  <div className="text-center py-8">
+                    <ExclamationCircleIcon className="h-12 w-12 text-red-200 mx-auto mb-4" />
+                    <p className="text-red-900 font-medium">
+                      Error Loading Visualizations
+                    </p>
+                    <p className="text-red-600 text-sm mt-1">{plotError}</p>
+                  </div>
+                ) : plotData ? (
+                  <FinancialCharts data={plotData} />
+                ) : (
+                  <div className="text-center py-8">
+                    <ChartBarIcon className="h-12 w-12 text-emerald-200 mx-auto mb-4" />
+                    <p className="text-emerald-900 font-medium">
+                      Click Refresh Analysis to View Visualizations
+                    </p>
+                    <p className="text-emerald-600 text-sm mt-1">
+                      The visualizations will be generated based on your tax
+                      data
+                    </p>
+                  </div>
+                )}
               </div>
             ) : insightData ? (
               <div>
