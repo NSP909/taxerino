@@ -30,8 +30,9 @@ def authenticate_gmail():
             token.write(creds.to_json())
     return creds
 
-def send_pdf_via_gmail(pdf_path, recipient_email="rthippar@terpmail.umd.edu", subject="PDF Attachment", body="Please find the attached PDF."):
-    """Sends a PDF file via Gmail API."""
+def send_pdf_via_gmail(pdf_path, recipient_email="mprakash@ucsd.edu", subject="PDF Attachment", body="Please find the attached PDF."):
+    """Sends a PDF file via Gmai
+    l API."""
     # Authenticate and authorize
     creds = authenticate_gmail()
     service = build("gmail", "v1", credentials=creds)

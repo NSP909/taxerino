@@ -1,5 +1,90 @@
 {
-    "document_status": "system generated payslip",
+    "account_number": "1290903434",
+    "additional_notes": "If checked, box 1 does not include loan origination fees and/or capitalized interest for loans made before September 1, 2004",
+    "borrower": {
+        "tin": "09092243",
+        "name": "ADITYA SINGH",
+        "street_address": "3845 STADIUM DRIEV",
+        "city": "COLLEGE PARK",
+        "state": "MD",
+        "zip_code": "20742"
+    },
+    "copy_type": "Copy B For Student",
+    "form_title": "Student Loan Interest Statement",
+    "form_type": "1099-INT",
+    "lender_information": {
+        "name": "BIG BAD BANK MAN",
+        "street_address": "9450 GILMAN DR",
+        "city": "SAN DIEGO",
+        "state": "CA",
+        "zip_code": "92092"
+    },
+    "omb_number": "1545-1576",
+    "recipient_tin": "123-44-8758",
+    "student_loan_interest_received": 20000,
+    "tax_year": "2024",
+    "enrollment_status": {
+        "at_least_half_time_student": true,
+        "graduate_student": false
+    },
+    "filer_details": {
+        "institution_name": "UNIVERSITY OF MARYLAND",
+        "address": {
+            "city": "COLLEGE PARK",
+            "state": "MD",
+            "country": "UNITED STATES OF AMERICA",
+            "zip": "20741"
+        },
+        "employer_identification_no": "52-9902033"
+    },
+    "financial_information": {
+        "payments_received": {
+            "qualified_tuition_and_related_expenses": 600000
+        },
+        "adjustments": {
+            "prior_year": 9000,
+            "scholarships_grants": 1000
+        }
+    },
+    "form_status": {
+        "void": false,
+        "corrected": false
+    },
+    "omb_no": "1545-1574",
+    "student_details": {
+        "name": "ADITYA SINGH",
+        "tin": "1010393588",
+        "address": {
+            "street": "3854 STADIUM DRIVE",
+            "city": "COLLEGE PARK",
+            "state": "MD",
+            "zip": "20742"
+        }
+    },
+    "filing_requirements": {
+        "fatca_filing_required": true
+    },
+    "form_details": {
+        "omb_number": "1545-0112",
+        "tax_year": 2025,
+        "form_revision": "January 2024",
+        "copy_number": "Copy 1"
+    },
+    "income_details": {
+        "interest_income": 1650,
+        "us_savings_bonds_interest": 5560,
+        "tax_exempt_interest": 200
+    },
+    "recipient_info": {
+        "name": "Aditya Singh",
+        "address": {
+            "street": "3855 Stadium Drive",
+            "city": "College Park",
+            "state": "MD",
+            "zip": "20427"
+        },
+        "account_number": "1290903434"
+    },
     "document_type": "Payslip",
     "employee": {
         "ssn": "123-44-8758",
@@ -20,34 +105,42 @@
             "state": "MD",
             "zip": "21404-2396"
         },
-        "ein": "52-6002033",
+        "id_number": "52-6002033",
         "control_number": "MD126640",
-        "state_id": "69-0520001L"
+        "ss_number": "69-0520001L"
     },
-    "tax_year": "2024",
-    "wages_and_tax": {
-        "wages_tips_compensation": 6232.85,
+    "status": "REISSUED STATEMENT",
+    "wages_and_taxes": {
+        "wages_tips_other_compensation": 6232.85,
         "federal_income_tax_withheld": 28.89,
         "social_security_wages": {
-            "amount": 1500,
-            "tax_withheld": 100
+            "box_3": 2000,
+            "box_4_tax_withheld": 100
         },
-        "medicare_wages": {
-            "amount": 2000,
-            "tax_withheld": 150
+        "medicare_wages_and_tips": {
+            "box_5": 1500,
+            "box_6_tax_withheld": 150
         },
         "social_security_tips": {
-            "amount": 70,
-            "allocated_tips": 50
+            "box_7": 70,
+            "box_8_allocated_tips": 50
         },
-        "state_wages": 6232.85,
-        "state_income_tax": 275.94,
-        "local_wages": 1200,
-        "local_income_tax": 47.88
+        "state_information": {
+            "state": "MD",
+            "state_wages": 6232.85,
+            "state_income_tax": 275.94
+        },
+        "local_information": {
+            "local_wages": 1200,
+            "local_income_tax": 47.88
+        }
     },
     "deductions": {
         "tax": 800,
         "total_deductions": 800
+    },
+    "document_info": {
+        "generation_type": "system generated payslip"
     },
     "earnings": {
         "basic_pay": 8000,
@@ -57,7 +150,7 @@
     },
     "employee_details": {
         "name": "Aditya Singh",
-        "employee_id": "007"
+        "id": "007"
     },
     "payment_details": {
         "pay_date": "2025/02/22",

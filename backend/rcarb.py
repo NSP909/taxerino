@@ -24,23 +24,23 @@ messages=[{
             }]
 
 def get_formatted_syntax(syntax, user_data):
-    formatted_user_query = f"""
-        This is the Syntax of the form:\n
-        {syntax}
+    # formatted_user_query = f"""
+    #     This is the Syntax of the form:\n
+    #     {syntax}
 
-        The is the information provided by the user:\n
-        {user_data}
+    #     The is the information provided by the user:\n
+    #     {user_data}
     
-    """
-    messages.append(
-            {
-                'role': 'user',
-                'content': formatted_user_query
-            })
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=messages,
-    )
-    out = response.choices[0].message.content
-    print("SSSSSSSSSS" + out)
-    return out
+    # """
+    # messages.append(
+    #         {
+    #             'role': 'user',
+    #             'content': formatted_user_query
+    #         })
+    # response = client.chat.completions.create(
+    #     model="gpt-4o-mini",
+    #     messages=messages,
+    # )
+    # out = response.choices[0].message.content
+    # print("SSSSSSSSSS" + out)
+    return syntax

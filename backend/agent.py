@@ -14,7 +14,7 @@ from form_filler.forms import el_filler
 from rag import get_relevant_info
 from rcarb import get_formatted_syntax
 import pyautogui
-
+from form_filler.gmail import send_pdf_via_gmail
 load_dotenv()
 
 
@@ -953,7 +953,7 @@ async def initialize_session(openai_ws):
                 }, {"type": "function",
                     "name": "fill_form",
                     "description": """Fill out the form with the data provided.
-                    Use this when you have all the data required to fill out the form
+                    Use this when you have all the data required to fill out the form and you need to email it to the user
                     Currently we can fill out these forms W-9, W-8BEN, W-4
                      """,
                     "parameters": {

@@ -49,6 +49,7 @@ UPLOAD_FOLDER = 'uploads'
 CACHE_FOLDER = 'cache'
 SUMMARY_CACHE_FILE = os.path.join(CACHE_FOLDER, 'tax_summary.json')
 
+
 # Create cache folder if it doesn't exist
 if not os.path.exists(CACHE_FOLDER):
     os.makedirs(CACHE_FOLDER)
@@ -203,48 +204,76 @@ def extract_text_from_pdf(pdf_path):
     # Convert PDF to images
     images_array = pdf_to_images(pdf_path)
     responses = []
-    anthropic = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-
+    
+    # Create a basic direct HTTP approach with no proxy dependencies
+    import requests
+    import json
+    
+    API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+    HEADERS = {
+        "x-api-key": API_KEY,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+    }
+    
     # Process each image
     for image_path in images_array:
         # Encode the image
         base64_image = encode_image(image_path)
         
         try:
-            response = anthropic.messages.create(
-                model="claude-3-5-sonnet-20241022",
-                max_tokens=1000,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": [
-                            {
-                                "type": "text",
-                                "text": """You are a tax expert. You will be provided with a document image, and your task is to extract all the text from it. 
-                                Please don't add any additional information. Also only extract information from documents which are in the form of tax documents/bank statements etc instead of just plain text.
-                                Also I want you to process the output in the form of a json schema with as many fields as possible with values. 
-                                There is no defined schema you need to extract as much info as you can in a json schema.
-                                BE AS PRECISE AS POSSIBLE.
-                                Take your time, the decision is yours, extract all the info CORRECTLY from this and give me back a json and not a string"""
-                            },
-                            {
-                                "type": "image",
-                                "source": {
-                                    "type": "base64",
-                                    "media_type": "image/png",
-                                    "data": base64_image
+            # Use a direct HTTP POST with no proxy config
+            response = requests.post(
+                "https://api.anthropic.com/v1/messages",
+                headers=HEADERS,
+                json={
+                    "model": "claude-3-5-sonnet-20241022",
+                    "max_tokens": 1000,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": """You are a tax expert. You will be provided with a document image, and your task is to extract all the text from it. 
+                                    Please don't add any additional information. Also only extract information from documents which are in the form of tax documents/bank statements etc instead of just plain text.
+                                    Also I want you to process the output in the form of a json schema with as many fields as possible with values. 
+                                    There is no defined schema you need to extract as much info as you can in a json schema.
+                                    BE AS PRECISE AS POSSIBLE.
+                                    Take your time, the decision is yours, extract all the info CORRECTLY from this and give me back a json and not a string"""
+                                },
+                                {
+                                    "type": "image",
+                                    "source": {
+                                        "type": "base64",
+                                        "media_type": "image/png",
+                                        "data": base64_image
+                                    }
                                 }
-                            }
-                        ]
-                    }
-                ]
+                            ]
+                        }
+                    ]
+                },
+                proxies={}  # Explicitly set empty proxies
             )
-
-            # Extract content from the response
-            responses.append(response.content[0].text)
+            
+            if response.status_code != 200:
+                print(f"Error from Anthropic API: {response.status_code} - {response.text}")
+                continue
+                
+            # Parse the JSON response
+            response_json = response.json()
+            # Extract content from the response (adjusted for direct API format)
+            content = response_json.get('content', [])
+            if content and len(content) > 0:
+                responses.append(content[0]['text'])
+            else:
+                print(f"No content in response: {response_json}")
             
         except Exception as e:
             print(f"Error processing image {image_path}: {str(e)}")
+            if 'response' in locals():
+                print(f"Response details: {response.text if hasattr(response, 'text') else 'No response text'}")
             
     # Clean up temporary image files
     for image_path in images_array:

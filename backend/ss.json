@@ -1,0 +1,65 @@
+{
+    "deductions": {
+        "tax": 800,
+        "total_deductions": 800
+    },
+    "document_note": "This is system generated payslip",
+    "document_type": "W-2 Wage and Tax Statement",
+    "earnings": {
+        "wages_tips_other_compensation": 6232.85,
+        "social_security_wages": 2000,
+        "medicare_wages_tips": 70,
+        "social_security_tips": 1500,
+        "allocated_tips": 50
+    },
+    "employee_details": {
+        "name": "Aditya Singh",
+        "id": "007"
+    },
+    "payment_details": {
+        "pay_date": "2025/02/22",
+        "working_days": 26
+    },
+    "summary": {
+        "net_pay": 8000
+    },
+    "employee": {
+        "ssn": "123-44-8758",
+        "name": "Aditya Singh",
+        "address": {
+            "street": "3854 Stadium Drive",
+            "city": "COLLEGE PARK",
+            "state": "MD",
+            "zip": "20742"
+        }
+    },
+    "employer": {
+        "name": "STATE OF MARYLAND",
+        "department": "CENTRAL PAYROLL BUREAU",
+        "address": {
+            "po_box": "2396",
+            "city": "ANNAPOLIS",
+            "state": "MD",
+            "zip": "21404-2396"
+        },
+        "id_number": "52-6002033",
+        "control_number": "MD126640",
+        "ss_number": "69-0520001L"
+    },
+    "local_tax_info": {
+        "local_wages": 1200,
+        "local_income_tax": 47.88
+    },
+    "state_tax_info": {
+        "state": "MD",
+        "state_wages": 6232.85,
+        "state_income_tax": 275.94
+    },
+    "status": "REISSUED STATEMENT",
+    "tax_year": "2024",
+    "taxes_withheld": {
+        "federal_income_tax": 28.89,
+        "social_security_tax": 100,
+        "medicare_tax": 150
+    }
+}
